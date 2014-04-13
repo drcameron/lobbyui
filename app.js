@@ -90,7 +90,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	}	
     });
 
-    untap.controller('lobbyCtrl', function($scope, $http, $rootScope, lobbyFeed, deckData) {
+    untap.controller('lobbyCtrl', function($scope, $http, $rootScope, $timeout, lobbyFeed, deckData) {
     	$scope.g = lobbyFeed;
     	$scope.decks = deckData;
     	$scope.template = 'templates/lobby.html';
@@ -109,8 +109,66 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     		}
     	}
 
+    	$scope.newGame = { action: 'startGame', players: 2 };
+    	$scope.startTitle = 'Start Game';
+
     	$scope.startGame = function() {
-    		console.log($scope.decks);
+    		$scope.gameAlert = false;
+
+    		if(jQuery.inArray( $scope.newGame.gameType, $scope.decks.deckTypes ) < 0) {
+    			$scope.gameAlert = { type: 'warning', message: 'Game Type not set' };
+    			return;
+    		}
+
+    		var delayStart = function(t) {
+    			if(t == 0) {
+    				$scope.startTitle = 'Starting Game...';
+    				$http.post(apiURL,  $scope.newGame, {responseType:'json', withCredentials: true }).
+		        	success(function(r, status) {
+		            	if(r.status == 'success') {
+		            		$scope.gameAlert = { type: r.status, message: r.message };
+		            		$timeout(function() {
+		            			$scope.gameAlert = false;
+		            			$scope.startTitle = 'Start Game';
+		            		}, 3000);
+		            	}else{
+		            		$scope.gameAlert = { type: r.status, message: r.message };
+		            	}
+		        	});
+    			}else{
+    				t--;
+    				$scope.startTitle = t;
+    				$timeout(function() {
+    					delayStart(t);
+    				}, 1000);
+    			}
+    		}
+
+    		var t = ($scope.g.userData.donate != '' ? 0 : 15);
+    		delayStart(t);
+    	}
+
+    	$scope.joinGame = function(game) {
+
+    		var password = '';
+
+    		if(game.locked != 'false') {
+    			var pass=prompt("Game Password",'');
+			    if (pass!=null) {
+			      password = pass;
+			    }
+    		}
+    		$http.post(apiURL,  {
+    			action: 'joinGame',
+    			password: password,
+    			host: game.host }, {responseType:'json', withCredentials: true }).
+    		success(function(r, s) {});
+    	}
+
+    	$scope.leaveGame = function() {
+    		$scope.g.userData.inGame = '';
+    		$http.post(apiURL,  { action: 'leaveGame' }, {responseType:'json', withCredentials: true }).
+    		success(function(r, s){});
     	}
 
     	$scope.quickPM = function(username) {

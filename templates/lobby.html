@@ -80,7 +80,35 @@
 		</div>
 	</div>
 	<div class="small-4 columns show-for-medium-up">
-		<div class="panel">
+		<div class="panel" ng-if="g.userData.inGame != ''">
+			<div class="row collapse">
+				<div class="small-9 columns">
+					<h4>{{g.userData.inGame.game.gameType}}: <i>{{g.userData.inGame.game.gameName}}</i></h4>
+				</div>
+				<div class="small-3 columns">
+					<a ng-click="leaveGame()" class="button expand tiny secondary"><i class="fi-x"></i> Leave</a>
+				</div>
+			</div>
+
+			<div class="row collapse players" ng-repeat="player in g.userData.inGame.players">
+	            <div class="small-10 columns">
+	                <h5>{{player.username}}</h5>
+	            </div>
+	            <div class="small-2 columns">
+	                <a href="#" class="button right success disabled tiny expand upperCase">{{player.location}}</a>
+	            </div>
+	        </div>
+
+			<div class="row">
+			    <div class="small-12 columns">
+			    	<a class="button expand small disabled" ng-if="g.userData.inGame.full != true">Waiting for Players...</a>
+			    	<a href="game.html" class="button expand small" ng-if="g.userData.inGame.full == true">Enter Game</a>
+
+			    </div>
+			</div>
+
+		</div>
+		<div class="panel" ng-if="g.userData.inGame == ''">
 			<div class="row collapse">
 				<div class="small-8 columns">
 					<h2>Games <small>{{g.gameList.length}}</small></h2>
@@ -91,36 +119,40 @@
 			</div>
 			<div id="newGameDrop" data-dropdown-content class="f-dropdown content small">
 			<p ng-if="g.userData.validemail != 'true'">You must validate your email address before starting games, you can do this from your profile page.</p>
-			<form ng-if="g.userData.validemail == 'true'" ng-submit="startGame()">
+			<form ng-if="g.userData.validemail == 'true'" ng-submit="startGame()" data-abide>
 				<div class="row">
 				    <div class="small-12 columns">
 				      <label>Game Name
-				        <input type="text" placeholder="Game Name" required/>
+				        <input type="text" placeholder="Game Name" maxlength="20" ng-model="newGame.gameName" required/>
 				      </label>
 				    </div>
 				</div>
 				<div class="row" ng-if="g.userData.canLock == 'true'">
 				    <div class="small-12 columns">
 				      <label>Password
-				        <input type="text" placeholder="Password to join, blank for none" />
+				        <input type="text" placeholder="Password to join, blank for none" ng-model="newGame.password" />
 				      </label>
 				    </div>
 				</div>
 				<div class="row">
 				    <div class="small-6 columns">
 				      <label>Type
-				        <select ng-model="newGame_deckType" ng-options="value for value in decks.deckTypes" required></select>
+				        <select ng-model="newGame.gameType" ng-options="value for value in decks.deckTypes" required></select>
 				      </label>
 				    </div>
 				    <div class="small-6 columns">
 				      <label>Players
-				        <select><option>2</option><option>Solo</option></select>
+				        <select ng-model="newGame.players" required>
+				        	<option value="2">2</option>
+				        	<option value="1">Solo</option>
+				        </select>
 				      </label>
 				    </div>
 				</div>
 				<div class="row">
 				    <div class="small-12 columns">
-				    	<button type="submit" class="expand small">Start Game</button>
+				    	<alert type="gameAlert.type" ng-show="gameAlert">{{gameAlert.message}}</alert>
+				    	<button type="submit" class="expand small" ng-class="{'disabled': startTitle != 'Start Game'}">{{startTitle}}</button>
 				    </div>
 				</div>
 			</form>
@@ -134,8 +166,8 @@
 		            <div class="small-2 columns">
 		                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
 		            </div>
-		            <a href="#" class="button success tiny hideJoin" ng-if="game.locked == 'false'"><i class="fi-play"></i> Join Game</a>
-					<a href="#" class="button alert tiny hideJoin" ng-if="game.locked == 'true'"><i class="fi-lock"></i> Join Game</a>
+		            <a ng-click="joinGame(game)" class="button success tiny hideJoin" ng-if="game.locked == 'false'"><i class="fi-play"></i> Join Game</a>
+					<a ng-click="joinGame(game)" class="button alert tiny hideJoin" ng-if="game.locked == 'true'"><i class="fi-lock"></i> Join Game</a>
 		        </div>
 
 				<div class="row collapse games" ng-repeat="game in g.specList">
@@ -197,11 +229,20 @@
 	#lobbyChat h2 {
 		color: white;
 	}
-
+	#lobbyChat h4 {
+		color: white;
+		margin: 7px;
+	}
 	.games .tiny {
 	    margin: 0;
 	    margin-bottom: 1px;
 	}
+
+	.players h5 {
+		margin: 8px;
+		color: white;
+	}
+
 	.games h5 {
 		color: white;
 	}

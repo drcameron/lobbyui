@@ -15,12 +15,6 @@
     <script src="gameAssets.js"></script>
     <link rel="stylesheet" type="text/css" href="gameStyle.css">
 
-<style type="text/css">
-    .specHide { display: none; }
-    .counter { pointer-events: none; }
-</style>
-<?php } ?>
-
 <script type="text/javascript">
 
     //global vars
@@ -46,8 +40,21 @@
     				".card, #deck, #deck2 { background-image: url('"+meDeckBack+"'); } " + 
     				".card.op, #opdeck, #opdeck2 { background-image: url('"+opDeckBack+"'); }" + 
     				' </style>');
+                $('html > head').append(cbStyles);
+
+
+                //hide stuff from spectators.... not important just visual
+                if(spectate) {
+                    var spStyles = $('<style> '+
+                        ".specHide { display: none; }" + 
+                        ".counter { pointer-events: none; }" + 
+                        ' </style>');
+                    $('html > head').append(spStyles);
+                }
     			
-    			$('html > head').append(cbStyles);
+    			for(d in data.myDecks) {
+                    $('<option value="'+data.myDecks[d].pdb_rowid+'" selected>'+data.myDecks[d].name+'</option>').appendTo('select[name="chDeck"]');
+                }
 
     			if(sData.isempty) {
     				alert('Failed to initilise game data');
@@ -87,7 +94,7 @@
 
     
     <div id="playsFirst">
-        <?=ucfirst($gData[game][fTurn])?> Plays First!
+     Plays First!
     </div>
     <script type="text/javascript">
         $(function(){
@@ -254,16 +261,7 @@
         <h2>Change Deck</h2>
         <span>Change to</span>
         <select name="chDeck">
-        <?php
-            $decks = pdb_query("decks", "*", "WHERE username = '".USERNAME."' AND type = '".$gData[game][gameType]."' ORDER BY name ASC");
-            foreach($decks as $value) {
-                if($gData[me][deck] == $value[pdb_rowid]) {
-                    echo '<option value="'.$value[pdb_rowid].'" selected>'.$value[name].'</option>';
-                }else{
-                    echo '<option value="'.$value[pdb_rowid].'">'.$value[name].'</option>';
-                }
-            }
-        ?>
+        
         </select>
         <span style="text-align: right;">
             <button id="changeDeckButton">Change Now</button>
