@@ -133,6 +133,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		            		}, 3000);
 		            	}else{
 		            		$scope.gameAlert = { type: r.status, message: r.message };
+		            		$scope.startTitle = 'Start Game';
 		            	}
 		        	});
     			}else{
@@ -217,7 +218,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     				.outerHeight()+$('#chatter')
     				.outerHeight()+38));
 
-    			$('#gamesPanel').css({ 'max-height': $('#chatFeed').height()-15, 'overflow': 'scroll' });
+    			//$('#gamesPanel').css({ 'max-height': $('#chatFeed').height()-15, 'overflow': 'scroll' });
     
     			baselineChat();
     			setTimeout(function(){

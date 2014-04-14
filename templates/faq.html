@@ -12,13 +12,12 @@
       <li class="heading">Game UI</li>
 
       <li><a ng-click="anchor($event)">Interface</a></li>
-      <li><a ng-click="anchor($event)">Game Menus</a></li>
-      <li><a ng-click="anchor($event)">Card Menus</a></li>
       <li><a ng-click="anchor($event)">Hot Keys</a></li>
-
+      <li><a ng-click="anchor($event)">Voice Chat</a></li>
       <li class="divider"></li>
 
       <li class="heading">Other Stuff</li>
+      <li><a ng-click="anchor($event)">Connection Issues</a></li>
       <li><a ng-click="anchor($event)">Device Support</a></li>
       <li><a ng-click="anchor($event)">Funding</a></li>
       <li><a ng-click="anchor($event)">Contribute Code</a></li>
@@ -156,14 +155,19 @@
     </li>
   </ul>
 
+  <p>All of your cards will have a left click menu. This menu allows actions to be performed on that card. Actions that send a card back to deck will send the card to its default deck.</p>
+
+  <p>Once cards are in the play area they can be moved around via click and drag. To move a pile of cards hold shift while clicking and dragging.</p>
+
+  <p>Some games require multiple decks. The deck on the left will always be the default draw deck. The secondary deck will be on the right. Both decks are subject to similar actions but hotkeys will not work for the second deck.</p>
  
+  <p>Cards in the play area can be targeted while holding shift and clicking the source card then the target cards.</p>
 
-  <hr>
+  <p>Most objects in the game when hovered will have a tool tip in the bottom left hand corner. This aids game play and eases the learning curve of the UnTap.in play-test engine.</p>
 
-  <h3>Game Menus</h3>
-  <hr>
+  <p>The game log is for displaying history of events during the game. All cards in the game log can be hovered to show full card. Card names will display as Unknown Card if you are not permitted to see the card in its current location, but will then update once you have permission to see the card.</p>
 
-  <h3>Card Menus</h3>
+
   <hr>
 
   <h3>Hot Keys</h3>
@@ -215,11 +219,28 @@
 
   <hr>
 
+  <h3>Voice Chat</h3>
+
+  <p>Voice chat can be started via the game menu (press ESC or click your username). The feature requires your browser to support WebRTC. Latest Chrome and Firefox support this. To see if your browser supports this <a href="http://caniuse.com/rtcpeerconnection" target="_blank">Click Here</a></p>
+
+
+  <hr>
+
   <h2 style="text-align:center;">Other Stuff</h2>
   
   <hr>
 
-  
+  <h3>Connection Issues</h3>
+
+  <p>Any issues with not being able to start games, unable to select deck, games returning to lobby once loaded or any game drop outs you can diagnose these issues with the following links</p>
+
+  <p><a href="http://websocketstest.com/">Test Web Sockets</a> - UnTap requires port 443 for the game cleint. If this is being blocked you will not be able to play-test on UnTap.</p>
+
+  <p><a href="http://whatiflabs.net/injectCheck/">Injected Code</a> - Some browser extenstions will inject code that may conflict with the clients ability to run properly, this test will scan for any injected code running on your web browser.</p>
+
+  <p>If you are still having issues after you have confirmed both of the above checks are fine, please try another browser before reporting the problem.</p>
+
+  <hr>
 
   <h3>Device Support</h3>
   <p>Currently UnTap.in offers full support for the latest versions of Chrome, Firefox, Safari, Internet Explorer and Opera running on Mac, Linux or Windows.</p>
@@ -275,9 +296,71 @@
       </div>
     </div>
   </div>
+  
   <br>
   <h4>Installing UnTap.in Web App on Android</h4>
-  <p></p>
+  <p>UnTap.in Support Tablets running Android 4.0+ and Chrome Beta. Follow the bellow instructions to install the web app on your device.</p>
+  <div class="row">
+    <div class="large-4 medium-6 columns">
+    <a class="th radius" href="#">
+      <img src="http://www.untap.in/img/help/andr_dlcb.png" />
+    </a>
+    </div>
+    <div class="large-8 medium-6 columns">
+      <div class="panel callout">
+        <p>Download Chrome Beta from the Play Store, its free and is required for UnTap to run on Android devices.</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-4 medium-6 columns">
+    <a class="th radius" href="#">
+      <img src="http://www.untap.in/img/help/andr_start.png" />
+    </a>
+    </div>
+    <div class="large-8 medium-6 columns">
+      <div class="panel callout">
+        <p>Browse to UnTap.in in Chrome Beta and select the three dots.</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-4 medium-6 columns">
+    <a class="th radius" href="#">
+      <img src="http://www.untap.in/img/help/andr_add.png" />
+    </a>
+    </div>
+    <div class="large-8 medium-6 columns">
+      <div class="panel callout">
+        <p>Select Add to homescreen.</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-4 medium-6 columns">
+    <a class="th radius" href="#">
+      <img src="http://www.untap.in/img/help/andr_home.png" />
+    </a>
+    </div>
+    <div class="large-8 medium-6 columns">
+      <div class="panel callout">
+        <p>After confirming the app title, select add.</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-4 medium-6 columns">
+    <a class="th radius" href="#">
+      <img src="http://www.untap.in/img/help/andr_done.png" />
+    </a>
+    </div>
+    <div class="large-8 medium-6 columns">
+      <div class="panel callout">
+        <p>You should now have the app installed on your home screen.</p>
+      </div>
+    </div>
+  </div>
+  <br>
   
   <hr>
   <h3>Funding</h3>

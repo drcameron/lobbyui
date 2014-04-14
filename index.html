@@ -107,9 +107,8 @@
           <ul class="dropdown">
             <li><a ng-if="g.userData.username != 'null'" ng-click="genModal('fundingModal')">Funding</a></li>
             <li><a ng-click="genModal('faq')">FAQ</a></li>
-            <li><a href="#" ng-if="g.userData.username != 'null'">Bug Tracker</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Admin</a></li>
+            <li><a href="https://www.facebook.com/untap" target="_blank">Facebook</a></li>
+            <li><a href="mailto:admin@untap.in" target="_blank">Contact</a></li>
           </ul>
         </li>
         <li class="divider"></li>
@@ -172,7 +171,23 @@
 		</div>
 		<div class="medium-6 columns">
 			<div class="panel">
-				<h4>Register</h4>
+			<h4>Create Account<h4>
+			<form>
+				<label>Username
+			    	<input type="text" placeholder="Your Username" required ng-model="regUsername">
+			    </label>
+			    <label>Email Address
+			        <input type="email" placeholder="Email Address" ng-model="regEmail" required/>
+			    </label>
+			    <label>Password
+			    	<input type="Password" placeholder="Enter your Password" required ng-model="regPassword">
+			    </label>
+			    <label>Retype Password
+			    	<input type="Password" placeholder="Retype your Password" required ng-model="regRePassword">
+			    </label>
+			    <alert type="regAlert.type" ng-show="regAlert">{{regAlert.message}}</alert>
+			    <button type="submit" class="expand">Create Account</button>
+			</form>
 			</div>
 		</div>
 	</div>
