@@ -1901,7 +1901,12 @@ var bindHotKeys = function(e) {
 startSockets = function() {
 	window.ws = new WebSocket('ws://www.untap.in:443/');
     
+    var socketError = setTimeout(function(){
+    	alert('Web Socket failed to connect, See FAQ Connection Issues');
+    }, 10000);
+
     ws.onopen = function() {
+    	clearTimeout(socketError);
     	$('#playObjects').fadeIn(1000, function(){
     			init.bfScaling();
     	});
@@ -1915,7 +1920,7 @@ startSockets = function() {
         parent.showFrame(2, 'two.html');
     };
     ws.onerror = function(e) {
-        $('#gameLog #gameChat.scroll').append('<div class="gLog">ERRROR'+e.toString()+'</div>');
+        alert('Web Socket Error: '+e.toString());
     };
 
     window.onbeforeunload = function() {
