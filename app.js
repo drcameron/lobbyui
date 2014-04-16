@@ -211,15 +211,10 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		}
 
     	$scope.onloadTemp = function() {
-    		if($('#chatFeed').length > 0) {
-    			//fix caht height window height with no scroll
-    			$('#chatFeed').height($(window).height()-($('#menuTopBar')
-    				.outerHeight()+$('#menuLobbyBar')
-    				.outerHeight()+$('#chatter')
-    				.outerHeight()+38));
 
-    			//$('#gamesPanel').css({ 'max-height': $('#chatFeed').height()-15, 'overflow': 'scroll' });
-    
+    		adjustForNoScroll();
+
+    		if($('#chatFeed').length > 0) {
     			baselineChat();
     			setTimeout(function(){
     				$(document).foundation();
@@ -592,6 +587,24 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		}, 100);
     }
 
+    function adjustForNoScroll() {
+    	//fix caht height window height with no scroll
+		$('#chatFeed').height($(window).height()-($('#menuTopBar')
+			.outerHeight()+$('#menuLobbyBar')
+			.outerHeight()+$('#chatter')
+			.outerHeight()+38));
+
+		$('#downUpdates>div').css({ 'max-height': $('#chatFeed').height()-15 });
+		$('#gamesPanel').css({ 'max-height': $('#chatFeed').height()-15 });
+
+		baselineChat();
+    }
+
+    $(function(){
+    	window.onresize = function(event) {
+    		adjustForNoScroll();
+    	}
+    });
 
 	$(document).foundation();
 	// $(function(){
