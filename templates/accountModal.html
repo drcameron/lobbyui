@@ -26,7 +26,7 @@
       <label>Email Address
         <input type="email" placeholder="Email Address" ng-model="userData.email" required/>
       </label>
-      <a href="#" class="button tiny secondary expand" ng-if="g.userData.validemail != 'true'">Validate Email</a>
+      <a class="button tiny secondary expand" ng-click="validateEmail()" ng-if="g.userData.validemail != 'true'">Validate Email</a>
       <label>Change Password
         <input type="password" placeholder="Enter New Password" ng-model="userData.password" />
       </label>

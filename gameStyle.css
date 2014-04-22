@@ -657,11 +657,6 @@
         right: calc(20% - 74px);
         right: -webkit-calc(20% - 74px);
         
-        <?php if($gData[game][gameType] == "L5R") { ?>
-        -webkit-box-shadow: inset 0 0 0px 5px #336633;
-        -moz-box-shadow: inset 0 0 0px 5px #336633;
-        box-shadow: inset 0 0 0px 5px #336633;
-        <?php } ?>
     }
 
     #opdeck2 {
@@ -690,11 +685,6 @@
     #deck {
         right: calc(20% - 74px);
         right: -webkit-calc(20% - 74px);
-        <?php if($gData[game][gameType] == "L5R") { ?>
-        -webkit-box-shadow: inset 0 0 0px 4px #336633;
-        -moz-box-shadow: inset 0 0 0px 4px #336633;
-        box-shadow: inset 0 0 0px 4px #336633;
-        <?php } ?>
     }
 
     #deck2 {

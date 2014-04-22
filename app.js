@@ -101,7 +101,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     			ev.target.value = '';
     			$rootScope.$broadcast('sendChat', message);
     			var postData = { action: 'sendChat', message: message }
-    			$http.post(apiURL,  postData, {responseType:'json'}).
+    			$http.post(apiURL,  postData, {responseType:'json', withCredentials: true }).
 		        	success(function(r, status) {});
     		}
     		if(ev.which == 38) {
@@ -232,6 +232,37 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     untap.controller('loggedout', function($scope, $http, $rootScope, lobbyFeed) {
     	$scope.g = lobbyFeed;
 
+    	$scope.register = function() {
+
+    		if($scope.regPassword != $scope.regRePassword) {
+    			$scope.regAlert = { type: 'warning', message: 'Passwords do not match' };
+    			return;
+    		}
+    		$scope.showAlert = false;
+    		$scope.regAlert = false;
+    		var postData = {
+    			action: 'createAccount',
+    			username: $scope.regUsername,
+    			password: $scope.regPassword,
+    			email: $scope.regEmail
+    		}
+
+			$http.post(apiURL,  postData, {responseType:'json', withCredentials: true }).
+        	success(function(r, status) {
+            	if(r.status == 'success') {
+            		$scope.regAlert = { type: r.status, message: r.message };
+
+            		$scope.regUsername = '';
+            		$scope.regEmail = '';
+            	}else{
+            		$scope.regAlert = { type: r.status, message: r.message };
+            		
+            	}
+            	$scope.regPassword = '';
+            	$scope.regRePassword = '';
+        	});
+    	}
+
     	$scope.login = function() {
     		var postData = { action: 'login', username: $scope.g.user, password: $scope.password }
     		$scope.showAlert = false;
@@ -273,6 +304,13 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
+
+		$scope.validateEmail = function() {
+			$http.post(apiURL,  { action: 'validateEmail' }, { responseType:'json', withCredentials: true }).
+			success(function(r, status) {
+				$scope.showAlert = { type: r.status, message: r.message };
+			});
+		}
 
 		$scope.saveProfile = function() {
 			$scope.showAlert = false;
@@ -474,6 +512,10 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		        	obj.blocks = syncArrObj(obj.blocks, obj2arr(r.blocks), 'username', 'sync');
 		        	//if(JSON.stringify(obj.online) != JSON.stringify(r.online)) { obj.online = r.online; }
 		        	obj.online = syncArrObj(obj.online, obj2arr(r.online), 'username', 'sync');
+
+		        	obj.serverStats = r.serverStats;
+
+		        	adjustForNoScroll();
 		        }
 		        if(typeof r.user != 'undefined') {
 		        	obj.user = r.user;
@@ -539,6 +581,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
             	username: 'null' //set default as null for no login.
             },
             gameList: [],
+            serverStats: [],
             user: ''
         }
     });

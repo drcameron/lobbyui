@@ -607,6 +607,24 @@ var init = {
                 doPost( { action: 'opSelect', selected: $('.opfindCardList').val() });
                 ui.oppopDeckMenu('close');
         });
+
+        $('#oplookCardGo').click(function() {
+            if($('.oplookCardAction').val() == 'none') return false;
+            if($('.oplookCardList').val() == 'none') return false;
+            var selVal = $('.oplookCardList').val().split(',');
+            $.each(selVal, function(key, value) {
+                if(!$('.oplookCardList option[value="'+value+'"]').exists()) {
+                    selVal.splice(key, 1);
+                }
+                $('.oplookCardList option[value="'+value+'"]').remove();
+                if(!$('.oplookCardList option[data-image]').exists()) {
+                    ui.oppopDeckMenu('close');
+                }
+            });
+            doPost( { action: $('.oplookCardAction').val(), cardid: selVal.join(), bypass: true });
+        });
+
+
         $('#findCardGo').click(function(){
             if($('.findCardAction').val() == 'none') return false;
             if($('.findCardList').val() == 'none') return false;
@@ -1184,7 +1202,7 @@ var menuMap = {
 		deFault: 'drawFaceDown'
 	},
 	opdeck: {
-		list: ['findOp', 'nill'],
+		list: ['findOp', 'oplooktop'],
 		setup: {start: 180, deg: 180, rad: 40 }
 	},
 	opdeck2: {
@@ -1387,6 +1405,17 @@ var menuFunc = {
 	        $(".lookCardList, #lookCardGo").prop('disabled', true);
 	        ui.popDeckMenu('lookCard');
 	        doPost( { action: 'revealCard', amount: Math.max(numPress, 1), from: from});
+		},
+		tip: 'Look Top',
+		sprite: 17,
+		multi: true
+	},
+	oplooktop: {
+		func: function(elem) {
+			var from = elem.attr('id');
+	        $(".oplookCardList, #oplookCardGo").prop('disabled', true);
+	        ui.popDeckMenu('oplookCard');
+	        doPost( { action: 'oprevealCard', amount: Math.max(numPress, 1), from: from});
 		},
 		tip: 'Look Top',
 		sprite: 17,
@@ -1934,7 +1963,7 @@ startSockets = function() {
     $.each(jData, function(key, value){
         if ((value !== null) && value.hasOwnProperty('type')) {
 
-            console.log(value);
+            //console.log(value);
             switch(value.type) {
 
                 case 'elements':
@@ -2125,6 +2154,20 @@ startSockets = function() {
                         $(".opfindCardList").append('<option value="'+rV.cardName+'" data-image="'+rV.img+'">'+rV.cardName+'</option>');
                     });
                     $(".opfindCardList, #opfindCardGo").prop('disabled', false);
+                break;
+
+                case 'oprevealCard':
+                	console.log(value);
+                    $(".oplookCardList").empty().append('<option value="none">Select Card</option>');
+                    var alList = new Array();
+                    $.each(value.showList, function(rK, rV) {
+                        $(".oplookCardList").append('<option value="'+rV.cardid+'" data-image="'+rV.img+'">'+rV.cardName+'</option>');
+                        alList.push(rV.cardid);
+                    });
+                    if(alList.length > 1) {
+                        $(".oplookCardList").append('<option value="'+alList.join()+'">Select All</option>');
+                    }
+                    $(".oplookCardList, #oplookCardGo").prop('disabled', false);
                 break;
 
                 case 'findCard':

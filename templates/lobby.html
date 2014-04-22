@@ -82,7 +82,7 @@
 				<div class="small-9 columns">
 					<h4>{{g.userData.inGame.game.gameType}}: <i>{{g.userData.inGame.game.gameName}}</i></h4>
 				</div>
-				<div class="small-3 columns">
+				<div class="small-3 columns" ng-if="g.userData.inGame.gameStatus != 'ingame'">
 					<a ng-click="leaveGame()" class="button expand tiny secondary"><i class="fi-x"></i> Leave</a>
 				</div>
 			</div>
@@ -103,6 +103,27 @@
 
 			    </div>
 			</div>
+			<br/>
+			<div ng-if="g.userData.inGame.full != true">
+			<div class="row collapse">
+				<div class="small-12 columns">
+					<h2>Games <small>{{g.gameList.length}}</small></h2>
+				</div>
+			</div>
+
+			<div ng-repeat="game in g.gameList" class="row collapse games" ng-class="{'hide': decks.deckTypes.indexOf(game.gameType) == -1, 'hide': game.username == g.userData.username}">
+	            <div class="small-10 columns">
+	                <h5 class="greenText">{{game.gameName}} <small>{{game.username}}</small></h5>
+	            </div>
+	            <div class="small-2 columns">
+	                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
+	            </div>
+	            <a ng-click="joinGame(game)" class="button success tiny hideJoin" ng-if="game.locked == 'false'"><i class="fi-play"></i> Join Game</a>
+				<a ng-click="joinGame(game)" class="button alert tiny hideJoin" ng-if="game.locked == 'true'">
+				<i class="fi-lock"></i> Join Game</a>
+		    </div>
+		    </div>
+
 		</div>
 		<div class="panel" ng-if="g.userData.inGame == ''">
 			<div class="row collapse">
@@ -160,7 +181,7 @@
 		                <h5 class="greenText">{{game.gameName}} <small>{{game.username}}</small></h5>
 		            </div>
 		            <div class="small-2 columns">
-		                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
+		                <a class="button right secondary disabled tiny expand">{{game.gameType}}</a>
 		            </div>
 		            <a ng-click="joinGame(game)" class="button success tiny hideJoin" ng-if="game.locked == 'false'"><i class="fi-play"></i> Join Game</a>
 					<a ng-click="joinGame(game)" class="button alert tiny hideJoin" ng-if="game.locked == 'true'"><i class="fi-lock"></i> Join Game</a>
@@ -171,12 +192,13 @@
 		                <h5>{{game.gameName}} <small>{{game.user1}} vs {{game.user2}}</small></h5>
 		            </div>
 		            <div class="small-2 columns">
-		                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
+		                <a class="button right secondary disabled tiny expand">{{game.gameType}}</a>
 		            </div>
 		            <a href="game.html#{{game.host}}" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
 		        </div>
 	        </div>
 		</div>
+		<p id="serverStats"><b>S1:</b> {{g.serverStats.s1}}/{{g.serverStats.s1Full}} <b>S2:</b> {{g.serverStats.s2}}/{{g.serverStats.s2Full}}</p>
 	</div>
 </div>
 <script type="text/javascript">
@@ -189,6 +211,15 @@
 	});
 </script>
 <style type="text/css">
+
+	#serverStats {
+		position: relative;
+		top: 0;
+		left: 0;
+		margin: 0;
+		text-align: center;
+		height: 0px;
+	}
 
 	#chatFeed {
 		overflow-y: scroll;

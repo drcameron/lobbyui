@@ -6,6 +6,8 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="UnTap.in Browser CCG Play Tester">
+	<meta name="keywords" content="browser,cgg,card game,online,multiplayer,deck,tester">
 	<meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="cache-control" content="no-cache" />
 	<meta http-equiv="expires" content="0" />
@@ -68,6 +70,14 @@
 
 	.row {
 		max-width: 200rem;
+	}
+
+	.orbit-heading {
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding-top: 25px;
+		padding-left: 40px;
 	}
 	</style>
 </head>
@@ -157,6 +167,41 @@
 	</div>
 
 	<div ng-controller="loggedout" ng-show="g.userData.username == 'null'">
+
+	<div class="row" style="margin-top: 10px; max-width: 62.5rem;">
+		<div class="small-12 columns">
+			<ul class="example-orbit" data-orbit>
+			  <li>
+			    <img src="http://i.imgur.com/RrSDvy9.jpg" alt="slide 1" />
+			    <div class="orbit-heading">
+			      <h2>CCG Deck Play-tester</h2>
+			      <h4>Browser Based</h4>
+			      <h4>No Downloads</h4>
+			      <h4>No Plugins</h4>
+			    </div>
+			  </li>
+			  <li>
+			    <img src="http://i.imgur.com/EYktZ0e.jpg" alt="slide 2" />
+			    <div class="orbit-heading">
+			      <h2>Feature Rich</h2>
+				  <h5>Light weight platform independent</h5>
+				  <h5>Spectator Mode</h5>
+				  <h5>In-built Voice Chat</h5>
+				  <h5>Solo Sandboxing</h5>
+			    </div>
+			  </li>
+			  <li>
+			    <img src="http://i.imgur.com/lK3hTrE.jpg" alt="slide 3" />
+			    <div class="orbit-heading">
+			      <h2>Tablet Support</h2>
+			      <h4>iOS 7+ iPad Support</h4>
+			      <h4>Android 4+ Tablet Support</h4>
+			    </div>
+			  </li>
+			</ul>
+		</div>
+	</div>
+
 	<div class="row" style="margin-top: 10px; max-width: 62.5rem;">
 		<div class="medium-6 columns">
 			<div class="panel">
@@ -176,7 +221,7 @@
 		<div class="medium-6 columns">
 			<div class="panel">
 			<h4>Create Account<h4>
-			<form>
+			<form ng-submit="register()" autocomplete="off">
 				<label>Username
 			    	<input type="text" placeholder="Your Username" required ng-model="regUsername" autocomplete="off">
 			    </label>
@@ -198,7 +243,7 @@
 	</div>
 	<div style="clear: both"></div>
 </body>
-<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="app.js?v=4"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

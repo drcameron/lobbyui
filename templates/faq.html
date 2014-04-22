@@ -62,17 +62,15 @@
       </div>
     </div>
   </div>
-  <p>
-  Some cards will require special inputs
-  </p>
 
   <h4>Importing a Deck</h4>
   <p>There are two methods for importing decks uploading a deck file or fetching from a deck URL. Uploading Deck files supports <strong>txt dec l5d o8d</strong> file types.<br>
-  Fetching decks from URL works by pulling a deck list down from a URL, if the page has a deck list on it, UnTap will do its best to import it. Not all URLs are supported, please make sure that the deck page is public and login is required to access the page.</p>
+  Fetching decks from URL works by pulling a deck list down from a URL, if the page has a deck list on it, UnTap will do its best to import it. Not all URLs are supported, please make sure that the deck page is public and no login is required to access the page.</p>
   <br />
 
   <h4>Custom Cards</h4>
   <p>Since UnTap uses remote URLs for all its card images you can by pass the card search API and manually add a custom image URL for a card. Custom cards will flag the deck as containing custom cards to prevent people changing card text, or atleast making you cautious to the know that the card is custom. A three character hash is created to store the URL for future saves.</p>
+  <p>This can be used to play homebrew cards, unreleased sets/cards, and token cards.</p>
   <div class="row">
     <div class="small-12 medium-12 large-8 columns">
       <h6>DECK INPUT</h6>
@@ -83,7 +81,7 @@
         2 Rules card^http://rules.com/card.jpg
         </code>
       </div>
-      <p>Please note, the URLs above are examples only. You have to provide a linke to the card image.
+      <p>Please note, the URLs above are examples only. You have to provide a link to the card image.
     </div>
     <div class="small-12 medium-12 large-4 columns">
     <h6>EXPLAINED</h6>
@@ -156,18 +154,22 @@
     </li>
   </ul>
 
+  <b>Card Menus</b><br>
   <p>All of your cards will have a left click menu. This menu allows actions to be performed on that card. Actions that send a card back to deck will send the card to its default deck.</p>
 
+  <b>Play Area</b><br>
   <p>Once cards are in the play area they can be moved around via click and drag. To move a pile of cards hold shift while clicking and dragging.</p>
+
+  <p>Cards in the play area can be targeted while holding shift and clicking the source card then the target cards.</p>
+
+  <b>Decks</b><br>
+  <p>Left click decks to open the menus, while menus are open you can type a number to perform the action multiple times. ex. type 7 them click draw, to draw 7 cards. (This will also work with hot keys)</p>
 
   <p>Some games require multiple decks. The deck on the left will always be the default draw deck. The secondary deck will be on the right. Both decks are subject to similar actions but hotkeys will not work for the second deck.</p>
  
-  <p>Cards in the play area can be targeted while holding shift and clicking the source card then the target cards.</p>
-
-  <p>Most objects in the game when hovered will have a tool tip in the bottom left hand corner. This aids game play and eases the learning curve of the UnTap.in play-test engine.</p>
-
-  <p>The game log is for displaying history of events during the game. All cards in the game log can be hovered to show full card. Card names will display as Unknown Card if you are not permitted to see the card in its current location, but will then update once you have permission to see the card.</p>
-
+  <b>Game Log</b><br>
+  <p>The Game Log displays the history of events that have happened during your game. All of the cards that appear in the game log can be hovered over to show a pop up of the card in its entirety. The names of the cards in the game log will be shown as “Unknown card” if you do not have the correct permissions to view the card (ex. Your opponent draws a card it will show the cards name for them, but for you it will show “unknown card”) If you are later allowed to see the card it will update in the game log automatically. 
+  </p>
 
   <hr>
 
@@ -218,6 +220,8 @@
     </div>
   </div>
 
+  <p>Multiple actions with hotkeys can be used by typing a number followed by the global hotkey, ex. typing 7c will draw 7 cards.</p>
+
   <hr>
 
   <h3>Voice Chat</h3>
@@ -235,11 +239,13 @@
 
   <p>Any issues with not being able to start games, unable to select deck, games returning to lobby once loaded or any game drop outs you can diagnose these issues with the following links</p>
 
-  <p><a href="http://websocketstest.com/">Test Web Sockets</a> - UnTap requires port 443 for the game cleint. If this is being blocked you will not be able to play-test on UnTap.</p>
+  <p><a href="http://websocketstest.com/" target="_blank">Test Web Sockets</a> - UnTap requires port 443 for the game cleint. If this is being blocked you will not be able to play-test on UnTap.</p>
 
-  <p><a href="http://whatiflabs.net/injectCheck/">Injected Code</a> - Some browser extenstions will inject code that may conflict with the clients ability to run properly, this test will scan for any injected code running on your web browser.</p>
+  <p><a href="http://whatiflabs.net/injectCheck/" target="_blank">Injected Code</a> - Some browser extenstions will inject code that may conflict with the clients ability to run properly, this test will scan for any injected code running on your web browser.</p>
 
-  <p>If you are still having issues after you have confirmed both of the above checks are fine, please try another browser before reporting the problem.</p>
+  <p>Last thing to check, is your browser up to date. <a href="https://www.whatismybrowser.com/" target="_blank">Check Browser Version</a>/</p>
+
+  <p>If you are still having issues after you have confirmed all of the above checks are fine, please try another browser before reporting the problem.</p>
 
   <hr>
 
@@ -365,11 +371,16 @@
   
   <hr>
   <h3>Funding</h3>
-  <p>All contributions go towards paying server costs.</p>
+  <p>All contributions go towards paying server costs and other UnTap related upkeep.</p>
+
+  <p>You will receive the perks of your funded amount instantly once payment has been made.</p>
+  <p>No refunds will be made regardless, so double check everything before proceeding. All payments are processed through Paypal.</p>
+  <p>Deck backs and slots will stay with your account permanently. Any issues please contact admin@untap.in, we will sort it out ASAP.</p>
+  <p>Yes, you can fund multiple times and get the perks added each time.</p>
 
   <p>Apart from the perks from the funding page, funders will also gain access to a few other things around UnTap.in</p>
 
-  <p><strong>Access to server 2</strong>: This server is alway on a stable release and is dedicated to hosting games. (Server 1 is typically on a development release version of the server daemon and will tend to be subjective to LAG during peak periods)</p>
+  <p><strong>Access to server 2 (S2)</strong>: This server is alway on a stable release and is dedicated to hosting games. (Server 1 (S1) is typically on a development release version of the server daemon and will tend to be subjective to LAG during peak periods)</p>
 
   <p><strong>Game Start Delay</strong>: Funders have the benifit of no countdown timer when starting games.</p>
 
