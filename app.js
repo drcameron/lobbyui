@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '5'
+window.uiVersion = '6'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -269,6 +269,25 @@ window.uiVersion = '5'
         	});
     	}
 
+    	$scope.forgotPass = false;
+
+    	$scope.forgotChange = function(val) {
+    		$scope.forgotPass = val;
+    	}
+
+    	$scope.forgotPassword = function() {
+			var postData = { action: 'forgotPass', username: $scope.forgetUsername, email: $scope.forgetEmail }
+    		$scope.showAlert = false;
+    		$http.post(apiURL,  postData, {responseType:'json', withCredentials: true }).
+        	success(function(r, status) {
+            	if(r.status == 'success') {
+            		$scope.showAlert = { type: r.status, message: r.message };
+            	}else{
+            		$scope.showAlert = { type: r.status, message: r.message };
+            	}
+        	});
+    	}
+
     	$scope.login = function() {
     		var postData = { action: 'login', username: $scope.g.user, password: $scope.password }
     		$scope.showAlert = false;
@@ -283,6 +302,8 @@ window.uiVersion = '5'
             	$scope.password = '';
         	});
     	}
+
+    	window.test = $scope;
     	
     });
 
@@ -306,6 +327,7 @@ window.uiVersion = '5'
     var accountModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
+    	$scope.dater = new Date().getTime();
 
     	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
@@ -319,6 +341,7 @@ window.uiVersion = '5'
 		}
 
 		$scope.saveProfile = function() {
+			$scope.dater = new Date().getTime();
 			$scope.showAlert = false;
 			var postData = {
 				action: 'updateUserData',
@@ -331,7 +354,7 @@ window.uiVersion = '5'
 			success(function(r, status) {
 				$scope.showAlert = { type: r.status, message: r.message };
 				if(postData.avatar != '') {
-					$scope.userData.avatar = $scope.userData.avatar + '?' + new Date().getTime();
+					$scope.userData.avatar = $scope.userData.avatar + '?' + $scope.dater;
 				}
 			});
 		}

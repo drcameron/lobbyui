@@ -204,9 +204,9 @@
 
 	<div class="row" style="margin-top: 10px; max-width: 62.5rem;">
 		<div class="medium-6 columns">
-			<div class="panel">
+			<div class="panel" ng-show="forgotPass == false">
 			<h4>Login<h4>
-			<form ng-submit="login()" autocomplete="off">
+			<form ng-submit="login()" autocomplete="off" >
 				<label>Username
 			    	<input type="text" placeholder="Your Username" required ng-model="g.user">
 			    </label>
@@ -215,6 +215,21 @@
 			    </label>
 			    <alert type="showAlert.type" ng-show="showAlert">{{showAlert.message}}</alert>
 			    <button type="submit" class="expand">Login</button>
+			    <p><a ng-click="forgotChange(true)" class="right">Forgot Password</a></p>
+			</form>
+			</div>
+			<div class="panel" ng-show="forgotPass == true">
+			<h4>Password Reset<h4>
+			<form ng-submit="forgotPassword()" autocomplete="off">
+				<label>Username
+			    	<input type="text" placeholder="Your Username" ng-model="forgetUsername" required >
+			    </label>
+			    <label>Email
+			    	<input type="email" placeholder="Your Email Address" ng-model="forgetEmail" required/>
+			    </label>
+			    <alert type="showAlert.type" ng-show="showAlert">{{showAlert.message}}</alert>
+			    <button type="submit" class="expand">Reset</button>
+			    <p><a ng-click="forgotChange(false)" class="right">Back to Login</a></p>
 			</form>
 			</div>
 		</div>
@@ -243,7 +258,8 @@
 	</div>
 	<div style="clear: both"></div>
 </body>
-<script type="text/javascript" src="app.js?v=5"></script>
+<script type="text/javascript" src="app.js?v=6"></script>
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
