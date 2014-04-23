@@ -39,10 +39,14 @@
 				window.me = sData.me.username;
 				window.meDeckBack = 'http://www.untap.in/backs/'+sData.me.userRow.deckBack;
 
+                $('#avatar').css("background-image", "url('http://www.untap.in/img/avatars/"+sData.me.userRow.avatar+"')");
+
                 window.vChatId =  sData.host+''+sData.game.gameId;
                 if(sData.game.multiplayer > 1) {
                     window.op = sData.opponents[1].username;
                     window.opDeckBack = 'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack;
+
+                    $('#opavatar').css("background-image", "url('http://www.untap.in/img/avatars/"+sData.opponents[1].userRow.avatar+"')");
                 }else{
                     window.op = 'Solo Mode'
                     window.opDeckBack = 'http://www.untap.in/backs/untap.jpg';
@@ -281,10 +285,6 @@
         <div style="width: 90%; margin-left: 5%;">
             <div id="sideboardList"></div>
             <div id="currentList"></div>
-            
-            <!-- <select id="currentList" style="height: 450px; width: 40%; float: right;" multiple> </select>-->
-
-            
             <span style="text-align: center; display:inline-block; width:100%;">
                 <button id="sideboardButton"><- Swap -></button>
             </span>

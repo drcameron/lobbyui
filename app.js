@@ -1,5 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
+window.uiVersion = '5'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -93,7 +94,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     untap.controller('lobbyCtrl', function($scope, $http, $rootScope, $timeout, lobbyFeed, deckData) {
     	$scope.g = lobbyFeed;
     	$scope.decks = deckData;
-    	$scope.template = 'templates/lobby.html';
+    	$scope.template = 'templates/lobby.html?'+uiVersion;
 
     	$scope.sendChat = function(ev) {
     		if(ev.which == 13) {
@@ -111,6 +112,11 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
     	$scope.newGame = { action: 'startGame', players: 2 };
     	$scope.startTitle = 'Start Game';
+
+    	$scope.goTo = function(url) {
+	    	window.location.href = url;
+	        window.location.assign(url);
+	    }
 
     	$scope.startGame = function() {
     		$scope.gameAlert = false;
@@ -224,7 +230,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
     	$scope.changeTemplate = function(template) {
     		if($scope.template != template) {
-    			$scope.template = 'templates/'+template+'.html';
+    			$scope.template = 'templates/'+template+'.html?'+uiVersion;
     		}
     	}
     });
@@ -416,14 +422,14 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
 		$scope.accountModal = function() {
 			var modalInstance = $modal.open({
-				templateUrl: 'templates/accountModal.html',
+				templateUrl: 'templates/accountModal.html?'+uiVersion,
 				controller: accountModalCtrl
 			});
 		}
 
 		$scope.genModal = function(which) {
 			var modalInstance = $modal.open({
-				templateUrl: 'templates/'+which+'.html',
+				templateUrl: 'templates/'+which+'.html?'+uiVersion,
 				controller: genModalCtrl,
 				opened: function () {
 	              alert('The couch was stolen!');
@@ -434,7 +440,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		$scope.deckModal = function(deckId) {
 			console.log(deckId);
 			var modalInstance = $modal.open({
-				templateUrl: 'templates/deckModal.html',
+				templateUrl: 'templates/deckModal.html?'+uiVersion,
 				controller: deckModalCtrl,
 				resolve: {
 					deckId: function () {

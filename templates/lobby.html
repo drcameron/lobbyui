@@ -99,7 +99,7 @@
 			<div class="row">
 			    <div class="small-12 columns">
 			    	<a class="button expand small disabled" ng-if="g.userData.inGame.full != true">Waiting for Players...</a>
-			    	<a href="game.html" class="button expand small" ng-if="g.userData.inGame.full == true">Enter Game</a>
+			    	<a ng-click="goTo('/lobbyui/game.html')" class="button expand small" ng-if="g.userData.inGame.full == true">Enter Game</a>
 
 			    </div>
 			</div>
@@ -194,7 +194,7 @@
 		            <div class="small-2 columns">
 		                <a class="button right secondary disabled tiny expand">{{game.gameType}}</a>
 		            </div>
-		            <a href="game.html#{{game.host}}" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
+		            <a ng-click="goTo('/lobbyui/game.html#' + game.host)" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
 		        </div>
 	        </div>
 		</div>
