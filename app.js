@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '6'
+window.uiVersion = '7'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -324,6 +324,11 @@ window.uiVersion = '6'
 		}
     }
 
+    var modModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
+    	$scope.g = lobbyFeed;
+
+    }
+
     var accountModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
@@ -447,6 +452,13 @@ window.uiVersion = '6'
 			var modalInstance = $modal.open({
 				templateUrl: 'templates/accountModal.html?'+uiVersion,
 				controller: accountModalCtrl
+			});
+		}
+
+		$scope.modModal = function() {
+			var modalInstance = $modal.open({
+				templateUrl: 'templates/mod.html?'+uiVersion,
+				controller: modModalCtrl
 			});
 		}
 

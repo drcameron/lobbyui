@@ -17,8 +17,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="http://www.untap.in/img/app/32.ico">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js"></script>
-    <script src="gameAssets.js"></script>
-    <link rel="stylesheet" type="text/css" href="gameStyle.css">
+    <script src="multiAssets.js?v=1"></script>
+    <link rel="stylesheet" type="text/css" href="multiStyle.css?v=1">
 
 <script type="text/javascript">
 
@@ -36,23 +36,76 @@
 
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
+
+                if(typeof sData.me.username != 'string') {
+                    alert('Game Data not loaded, Please Report');
+                    window.location.href = returnUrl;
+                    window.location.assign(returnUrl);
+                    return;
+                }
+
 				window.me = sData.me.username;
 				window.meDeckBack = 'http://www.untap.in/backs/'+sData.me.userRow.deckBack;
 
+                $('#avatar').css("background-image", "url('http://www.untap.in/img/avatars/"+sData.me.userRow.avatar+"')");
+
                 window.vChatId =  sData.host+''+sData.game.gameId;
                 if(sData.game.multiplayer > 1) {
+
+                    $marker = $('#opponentMarker');
+                    for(opNum in sData.opponents) {
+
+                        $('<div id="opusername_'+sData.opponents[opNum].username+'" class="username" data-livelements="opusername_'+sData.opponents[opNum].username+'"></div>')
+                        .insertAfter($marker);
+
+                        $('<div id="opavatar_'+sData.opponents[opNum].username+'" class="avatar">'+
+                            '<div class="counter life" data-livelements="oplife_'+sData.opponents[opNum].username+'">?</div>'+
+                            '<div class="counter genCount" data-livelements="opgenCount_'+sData.opponents[opNum].username+'">?</div>'+
+                            '</div>').insertAfter($marker);
+
+                        $('<div id="ophand_'+sData.opponents[opNum].username+'" class="hand"></div>').insertAfter($marker);
+                        $('<div id="opdiscard_'+sData.opponents[opNum].username+'" class="spanPile"></div>').insertAfter($marker);
+                        $('<div id="opexpelled_'+sData.opponents[opNum].username+'" class="spanPile"></div>').insertAfter($marker);
+                        $('<div id="opfacedownpile_'+sData.opponents[opNum].username+'" class="spanPile"></div>').insertAfter($marker);
+
+                        $('<div id="opdeck_'+sData.opponents[opNum].username+'" class="card" data-umenu="opdeck" >'+
+                            '<span class="counter deckCount" data-livelements="opdeck_'+sData.opponents[opNum].username+'">?</span>'+
+                            '</div>').insertAfter($marker);
+
+                        $('<div id="opdeck2_'+sData.opponents[opNum].username+'" class="card" data-umenu="opdeck2" >'+
+                            '<span class="counter deckCount" data-livelements="opdeck2_'+sData.opponents[opNum].username+'">?</span>'+
+                            '</div>').insertAfter($marker);
+
+                        $('html > head').append(
+                            $('<style> '+
+                                "#opdeck_"+sData.opponents[opNum].username+", #opdeck2_"+sData.opponents[opNum].username+" { background-image: url('"+
+                                    'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack+"'); }"+' </style>'));
+                    }
                     window.op = sData.opponents[1].username;
                     window.opDeckBack = 'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack;
+
+                    $('#opavatar').css("background-image", "url('http://www.untap.in/img/avatars/"+sData.opponents[1].userRow.avatar+"')");
                 }else{
                     window.op = 'Solo Mode'
                     window.opDeckBack = 'http://www.untap.in/backs/untap.jpg';
                 }
     			
+                //add styles for certain formats
     			var cbStyles = $('<style> '+
     				".card, #deck, #deck2 { background-image: url('"+meDeckBack+"'); } " + 
     				".card.op, #opdeck, #opdeck2 { background-image: url('"+opDeckBack+"'); }" + 
     				' </style>');
                 $('html > head').append(cbStyles);
+
+                if(sData.game.gameType == 'L5R') {
+                    var typeStyles = $('<style> '+
+                        "#deck,#opdeck {" + 
+                        "-webkit-box-shadow: inset 0 0 0px 5px #336633;" + 
+                        "-moz-box-shadow: inset 0 0 0px 5px #336633;" + 
+                        "box-shadow: inset 0 0 0px 5px #336633;" + 
+                        '} </style>');
+                    $('html > head').append(typeStyles);
+                }
 
 
                 //hide stuff from spectators.... not important just visual
@@ -95,6 +148,7 @@
 
         }
     };
+
 
 </script>
 </head>
@@ -200,34 +254,24 @@
     <div id="deck" class="card deck" data-umenu="deck" data-ttip="Main Draw Deck: Click for actions, Press a number 1-99 for multiple actions."><span class="counter deckCount" data-livelements="deck">?</span></div>
     <div id="deck2" class="card deck" data-umenu="deck2" data-ttip="Second Deck: Click for actions, Press a number 1-99 for multiple actions."><span class="counter deckCount" data-livelements="deck2">?</span></div>
     
-    <div id="opdeck" class="card" data-umenu="opdeck" ><span class="counter deckCount" data-livelements="op1deck">?</span></div>
-    <div id="opdeck2" class="card" data-umenu="opdeck2" ><span class="counter deckCount" data-livelements="op1deck2">?</span></div>
 
     <div id="avatar" class="avatar">
         <div class="counter life" data-livelements="life" data-ttip="Life Count. Left click to increase, Right Click to Decrease (Hotkeys Up/Down Arrow)">?</div>
         <div class="counter genCount" data-livelements="genCount" data-ttip="General Counter. Left click to increase, Right Click to Decrease">?</div>
     </div>
-    <div id="opavatar" class="avatar">
-        <div class="counter life" data-livelements="op1life">?</div>
-        <div class="counter genCount" data-livelements="op1genCount">?</div>
-    </div>
-
-    <div id="opusername" class="username" data-livelements="op1username"></div>
+    
     <div id="username" class="username" onclick="ui.popBox('gameMenu')">
         <span data-livelements="username"></span>
     </div>
 
     <div id="hand" class="hand"></div>
-    <div id="ophand" class="hand"></div>
-
     <div id="discard" class="spanPile"></div>
-    <div id="opdiscard" class="spanPile"></div>
-
     <div id="expelled" class="spanPile"></div>
-    <div id="opexpelled" class="spanPile"></div>
-
     <div id="facedownpile" class="spanPile"></div>
-    <div id="opfacedownpile" class="spanPile"></div>
+
+    <hr id="opponentMarker" style="display:none;">
+
+    
 
     <div id="outCardLeft"><textarea></textarea></div>
     <div id="outCardRight"><textarea></textarea></div>
@@ -269,10 +313,6 @@
         <div style="width: 90%; margin-left: 5%;">
             <div id="sideboardList"></div>
             <div id="currentList"></div>
-            
-            <!-- <select id="currentList" style="height: 450px; width: 40%; float: right;" multiple> </select>-->
-
-            
             <span style="text-align: center; display:inline-block; width:100%;">
                 <button id="sideboardButton"><- Swap -></button>
             </span>
@@ -374,37 +414,43 @@
         display: inline-block;
     }
 </style>
-<script src="/src/vchat.js"></script>
+
 <script type="text/javascript">
-    // grab the room from the URL
-    function killVoice() {
-        $('#localVideo').replaceWith( '<video id="localVideo"></video>' );
-        $('#remotes').empty();
-        doPost( { action: 'chat', message: 'I have ended voice chat.', chatId: ui.makeid() });
-        $('#startVchat').show();
-        $('#endVchat').hide();
-    }
-    function startVchat() {
-        if(spectate == true) return false;
-        doPost( { action: 'chat', message: 'I have started voice chat.', chatId: ui.makeid() });
-        var room = vChatId;
-        $('#startVchat').hide();
-        $('#endVchat').show();
-        // create our webrtc connection
-        var webrtc = new SimpleWebRTC({
-            localVideoEl: 'localVideo', 
-            remoteVideosEl: 'remotes', 
-            autoRequestMedia: true, 
-            log: true
+    console.log(window.navigator.sayswho, 'browser');
+    if((navigator.sayswho.indexOf("Chrome") > -1)||(navigator.sayswho.indexOf("Firefox") > -1)) {
+        console.log('Including Voice Chat');
+        $.getScript( "http://www.untap.in/src/vchat.js", function( data, textStatus, jqxhr ) {
+          // grab the room from the URL
+            function killVoice() {
+                $('#localVideo').replaceWith( '<video id="localVideo"></video>' );
+                $('#remotes').empty();
+                doPost( { action: 'chat', message: 'I have ended voice chat.', chatId: ui.makeid() });
+                $('#startVchat').show();
+                $('#endVchat').hide();
+            }
+            function startVchat() {
+                if(spectate == true) return false;
+                doPost( { action: 'chat', message: 'I have started voice chat.', chatId: ui.makeid() });
+                var room = vChatId;
+                $('#startVchat').hide();
+                $('#endVchat').show();
+                // create our webrtc connection
+                var webrtc = new SimpleWebRTC({
+                    localVideoEl: 'localVideo', 
+                    remoteVideosEl: 'remotes', 
+                    autoRequestMedia: true, 
+                    log: true
+                });
+                
+                webrtc.on('readyToCall', function () {
+                    // you can name it anything
+                    console.log(room, 'joining voice chat');
+                    if (room) webrtc.joinRoom(room);
+                });
+            }
         });
-        
-        webrtc.on('readyToCall', function () {
-            // you can name it anything
-            console.log(room, 'joining voice chat');
-            if (room) webrtc.joinRoom(room);
-        });
     }
-    
 </script>
+
 </body>
 </html>

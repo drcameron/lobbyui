@@ -320,7 +320,9 @@ gameInit = function() {
 									return false;
 								}
 
+								console.log(menuType);
 								if(typeof menuMap[menuType].list != 'undefined') {
+								console.log(menuMap[menuType].list);
 									if(typeof menuMap[menuType].deFault != 'undefined') {
 										catchDbl = {
 											element: $elem,
@@ -1659,7 +1661,7 @@ function cardSync(data) {
 	        $('#battlefield').append('<div class="card" data-cardid="'+cardid+'"></div>');
 	    }else{
 	        if(data.owner != me) {
-	            $('#op'+data.location).append('<div class="card" data-cardid="'+cardid+'"></div>');
+	            $('#op'+data.location+'_'+data.owner).append('<div class="card" data-cardid="'+cardid+'"></div>');
 	        }else{
 	            $('#'+data.location).append('<div class="card" data-cardid="'+cardid+'"></div>');
 	        }

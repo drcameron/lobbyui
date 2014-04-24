@@ -2,6 +2,20 @@
 <html>
 <head>
     <title>UnTap.in :: Beta</title>
+    <script type='text/javascript'>
+        window.Muscula = { settings:{
+            logId:"a44634ed-7e8e-4dde-9607-c8a099f91de5", suppressErrors: false
+        }};
+        (function () {
+            var m = document.createElement('script'); m.type = 'text/javascript'; m.async = true;
+            m.src = (window.location.protocol == 'https:' ? 'https:' : 'http:') +
+                '//musculahq.appspot.com/Muscula6.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(m, s);
+            window.Muscula.run=function(){var a;eval(arguments[0]);window.Muscula.run=function(){};};
+            window.Muscula.errors=[];window.onerror=function(){window.Muscula.errors.push(arguments);
+            return window.Muscula.settings.suppressErrors===undefined;}
+        })();
+    </script>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,8 +31,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="http://www.untap.in/img/app/32.ico">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js"></script>
-    <script src="gameAssets.js?v=1"></script>
-    <link rel="stylesheet" type="text/css" href="gameStyle.css?v=1">
+    <script src="gameAssets.js?v=5"></script>
+    <link rel="stylesheet" type="text/css" href="gameStyle.css?v=5">
 
 <script type="text/javascript">
 
@@ -36,6 +50,14 @@
 
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
+
+                if(typeof sData.me.username != 'string') {
+                    alert('Game Data not loaded, Please Report');
+                    window.location.href = returnUrl;
+                    window.location.assign(returnUrl);
+                    return;
+                }
+
 				window.me = sData.me.username;
 				window.meDeckBack = 'http://www.untap.in/backs/'+sData.me.userRow.deckBack;
 
@@ -386,37 +408,44 @@
         display: inline-block;
     }
 </style>
-<script src="/src/vchat.js"></script>
+
 <script type="text/javascript">
-    // grab the room from the URL
-    function killVoice() {
-        $('#localVideo').replaceWith( '<video id="localVideo"></video>' );
-        $('#remotes').empty();
-        doPost( { action: 'chat', message: 'I have ended voice chat.', chatId: ui.makeid() });
-        $('#startVchat').show();
-        $('#endVchat').hide();
-    }
-    function startVchat() {
-        if(spectate == true) return false;
-        doPost( { action: 'chat', message: 'I have started voice chat.', chatId: ui.makeid() });
-        var room = vChatId;
-        $('#startVchat').hide();
-        $('#endVchat').show();
-        // create our webrtc connection
-        var webrtc = new SimpleWebRTC({
-            localVideoEl: 'localVideo', 
-            remoteVideosEl: 'remotes', 
-            autoRequestMedia: true, 
-            log: true
+
+    console.log(window.navigator.sayswho, 'browser');
+    if((navigator.sayswho.indexOf("Chrome") > -1)||(navigator.sayswho.indexOf("Firefox") > -1)) {
+        console.log('Including Voice Chat');
+        $.getScript( "http://www.untap.in/src/vchat.js", function( data, textStatus, jqxhr ) {
+          // grab the room from the URL
+            function killVoice() {
+                $('#localVideo').replaceWith( '<video id="localVideo"></video>' );
+                $('#remotes').empty();
+                doPost( { action: 'chat', message: 'I have ended voice chat.', chatId: ui.makeid() });
+                $('#startVchat').show();
+                $('#endVchat').hide();
+            }
+            function startVchat() {
+                if(spectate == true) return false;
+                doPost( { action: 'chat', message: 'I have started voice chat.', chatId: ui.makeid() });
+                var room = vChatId;
+                $('#startVchat').hide();
+                $('#endVchat').show();
+                // create our webrtc connection
+                var webrtc = new SimpleWebRTC({
+                    localVideoEl: 'localVideo', 
+                    remoteVideosEl: 'remotes', 
+                    autoRequestMedia: true, 
+                    log: true
+                });
+                
+                webrtc.on('readyToCall', function () {
+                    // you can name it anything
+                    console.log(room, 'joining voice chat');
+                    if (room) webrtc.joinRoom(room);
+                });
+            }
         });
-        
-        webrtc.on('readyToCall', function () {
-            // you can name it anything
-            console.log(room, 'joining voice chat');
-            if (room) webrtc.joinRoom(room);
-        });
     }
-    
 </script>
+
 </body>
 </html>
