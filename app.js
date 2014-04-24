@@ -151,7 +151,7 @@ window.uiVersion = '7'
     			}
     		}
 
-    		var t = ($scope.g.userData.donate != '' ? 0 : 15);
+    		var t = ($scope.g.userData.donate == 'true' ? 0 : 15);
     		delayStart(t);
     	}
 
@@ -664,7 +664,11 @@ window.uiVersion = '7'
 	}
 
     function baselineChat() {
-    	if($('#chatFeed').length < 1) return false;
+
+    	if(($('#chatFeed')[0].scrollHeight != 0)&&($('#chatFeed')[0].scrollHeight-($('#chatFeed').scrollTop()+$('#chatFeed').height()) > 70)) {
+    		return false;
+    	}
+		if($('#chatFeed').length < 1) return false;
     	clearTimeout(window.scrollDowner);
 		window.scrollDowner = setTimeout(function() {
 			$('#chatFeed').scrollTop($('#chatFeed')[0].scrollHeight);

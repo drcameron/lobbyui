@@ -28,16 +28,21 @@
     //dom assets
 
     $(function() {
+        loadHelp('Initilising Game...');
+
     	$.post( "http://www.untap.in/apiv2.php",
     		{ action: 'entergame', server: location.hash.replace('#', '') },
     		function(data) {
+
+                loadHelp('Preparing Game Data...');
+
 				console.log(data);
 				window.sData = data;
 
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
 
-                if(typeof sData.me.username != 'string') {
+                if(typeof sData.me == 'undefined') {
                     alert('Game Data not loaded, Please Report');
                     window.location.href = returnUrl;
                     window.location.assign(returnUrl);
@@ -122,6 +127,7 @@
                 }
 
     			if(sData.isempty) {
+                    loadHelp('Failed to initilise game data');
     				alert('Failed to initilise game data');
 					window.location.href = returnUrl;
 	            	window.location.assign(returnUrl);
@@ -156,9 +162,10 @@
 <div id="ruleTop"></div>
 <div id="ruleLeft"></div>
 
+<h2 id="loadHelp">Loading initial resources...</h2>
+
 <div id="playObjects" style="display: none;">
 
-    
     <div id="playsFirst">
      Plays First!
     </div>

@@ -1623,17 +1623,8 @@ function cardSync(data) {
 	var cardCache = $('div[data-cardid="'+cardid+'"]');
 	var currentLocation = cardCache.parent().attr('id');
 
-	if($('#deck').data('tempcid') == cardid) {
-	    $('#deck').css("background-image", "url('"+meDeckBack+"')").data('tempcid', '');
-	}
-	if($('#opdeck').data('tempcid') == cardid) {
-	    $('#opdeck').css("background-image", "url('"+opDeckBack+"')").data('tempcid', '');
-	}
-	if($('#deck2').data('tempcid') == cardid) {
-	    $('#deck2').css("background-image", "url('"+meDeckBack+"')").data('tempcid', '');
-	}
-	if($('#opdeck2').data('tempcid') == cardid) {
-	    $('#opdeck2').css("background-image", "url('"+opDeckBack+"')").data('tempcid', '');
+	if($('div[data-tempcid="'+cardid+'"]').exists()) {
+		$('div[data-tempcid="'+cardid+'"]').css("background-image", "").data('tempcid', '');
 	}
 
 	if(String(currentLocation).search(data.location) < 0) {
@@ -1928,6 +1919,8 @@ var bindHotKeys = function(e) {
 }
 
 startSockets = function() {
+	loadHelp('Starting Socket Connection...');
+
 	window.ws = new WebSocket('ws://www.untap.in:443/');
     
     var socketError = setTimeout(function(){
@@ -1943,6 +1936,9 @@ startSockets = function() {
         var device = ''
         if(isMobile) device = 'tablet';
         $('#gameLog #gameChat.scroll').append('<div class="gLog">CONNECTED '+device+'</div>');
+
+        loadHelp('Socket Server Connected');
+        $('#loadHelp').fadeOut();
     };
     ws.onclose = function() {
     //$('#gameLog #gameChat.scroll').append('<div class="gLog">DISCONNECTED</div>');
@@ -1971,11 +1967,14 @@ startSockets = function() {
                     for(element in value) {
                         $('[data-livelements="'+element+'"]').text(value[element]);
                     }
-                    if(parseInt($('#deck .deckCount').text()) > 0) { $('#deck').show(); $('#noDeck').hide(); }else{ $('#deck').hide(); }
-                    if(parseInt($('#opdeck .deckCount').text()) > 0) { $('#opdeck').show(); }else{ $('#opdeck').hide(); }
 
-                    if(parseInt($('#deck2 .deckCount').text()) > 0) { $('#deck2').show(); }else{ $('#deck2').hide(); }
-                    if(parseInt($('#opdeck2 .deckCount').text()) > 0) { $('#opdeck2').show(); }else{ $('#opdeck2').hide(); }
+                    $('.deckCount').each(function() {
+						$( this ).addClass( "foo" );
+						if(parseInt($(this).text()) > 0) { $(this).parent().show(); }else{ $(this).parent().hide(); }
+					});
+
+                    if(parseInt($('#deck .deckCount').text()) > 0) { $('#deck').show(); $('#noDeck').hide(); }else{ $('#deck').hide(); }
+
                 break;
 
                 case 'debug':
@@ -2013,10 +2012,10 @@ startSockets = function() {
                 case 'flipuptd':
                     if(value.username == me) {
                         $('#'+value.deck).css("background-image", "url("+value.cardimg+")").data('tempcid', value.cardid);
+                    }else{
+                    	$('#op'+value.deck+'_'+value.username).css("background-image", "url("+value.cardimg+")").data('tempcid', value.cardid);
                     }
-                    if(value.username == op) {
-                        $('#op'+value.deck).css("background-image", "url("+value.cardimg+")").data('tempcid', value.cardid);
-                    }
+                    
 
                 break;
 
@@ -2244,6 +2243,9 @@ window.navigator.sayswho = (function(){
     return M.join(' ');
 })();
 
+function loadHelp(text) {
+	$('#loadHelp').text(text);
+}
 
 function doPost(data, func) {
     data.sendid = ui.makeid();

@@ -319,28 +319,30 @@ gameInit = function() {
 								if((menuType == 'battlefield')&&(e.shiftKey)) {
 									return false;
 								}
-
-								if(typeof menuMap[menuType].list != 'undefined') {
-									if(typeof menuMap[menuType].deFault != 'undefined') {
-										catchDbl = {
-											element: $elem,
-											action: menuMap[menuType].deFault
+								if(typeof menuMap[menuType] != 'undefined') {
+									if(typeof menuMap[menuType].list != 'undefined') {
+										if(typeof menuMap[menuType].deFault != 'undefined') {
+											catchDbl = {
+												element: $elem,
+												action: menuMap[menuType].deFault
+											};
+											setTimeout(function(){
+												catchDbl = false;
+											},350);
+										}
+										
+										var allMenu = menuMap[menuType].list;
+										var menuSetup = menuMap[menuType].setup;
+										//var pos = {top:ev.originalEvent.targetTouches[0].pageY,left:ev.originalEvent.targetTouches[0].pageX};
+										var pos = {
+											top: (ev.originalEvent.pageY>0 ? ev.originalEvent.pageY: ev.originalEvent.targetTouches[0].pageY),
+											left: (ev.originalEvent.pageX>0 ? ev.originalEvent.pageX: ev.originalEvent.targetTouches[0].pageX)
 										};
-										setTimeout(function(){
-											catchDbl = false;
-										},350);
+										//.targetTouches[0]
+							            unTapMenu.make(pos, allMenu, $elem, menuSetup);
 									}
-									
-									var allMenu = menuMap[menuType].list;
-									var menuSetup = menuMap[menuType].setup;
-									//var pos = {top:ev.originalEvent.targetTouches[0].pageY,left:ev.originalEvent.targetTouches[0].pageX};
-									var pos = {
-										top: (ev.originalEvent.pageY>0 ? ev.originalEvent.pageY: ev.originalEvent.targetTouches[0].pageY),
-										left: (ev.originalEvent.pageX>0 ? ev.originalEvent.pageX: ev.originalEvent.targetTouches[0].pageX)
-									};
-									//.targetTouches[0]
-						            unTapMenu.make(pos, allMenu, $elem, menuSetup);
 								}
+								
 							}
 							return false;
 						}
@@ -1926,6 +1928,8 @@ var bindHotKeys = function(e) {
 }
 
 startSockets = function() {
+	loadHelp('Starting Socket Connection...');
+
 	window.ws = new WebSocket('ws://www.untap.in:443/');
     
     var socketError = setTimeout(function(){
@@ -1934,6 +1938,7 @@ startSockets = function() {
 
     ws.onopen = function() {
     	clearTimeout(socketError);
+
     	$('#playObjects').fadeIn(1000, function(){
     			init.bfScaling();
     	});
@@ -1941,6 +1946,8 @@ startSockets = function() {
         var device = ''
         if(isMobile) device = 'tablet';
         $('#gameLog #gameChat.scroll').append('<div class="gLog">CONNECTED '+device+'</div>');
+        loadHelp('Socket Server Connected');
+        $('#loadHelp').fadeOut();
     };
     ws.onclose = function() {
     //$('#gameLog #gameChat.scroll').append('<div class="gLog">DISCONNECTED</div>');
@@ -2226,6 +2233,8 @@ startSockets = function() {
     
 // }); //replaced with .on equiv below.
 
+
+
 window.navigator.sayswho = (function(){
     var ua= navigator.userAgent, tem, 
     M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
@@ -2247,6 +2256,10 @@ function doPost(data, func) {
     data.sendid = ui.makeid();
     console.log(data);
     ws.send(JSON.stringify(data));
+}
+
+function loadHelp(text) {
+	$('#loadHelp').text(text);
 }
 
 $.fn.topZ = function() {
