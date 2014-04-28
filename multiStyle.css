@@ -947,6 +947,17 @@
         background-color: silver;
     }
 
+    #playersList {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 80px;
+    }
+
+    #playersList button {
+        width: 100%;
+    }
+
     #phase {
         position: absolute;
         bottom: 5px;

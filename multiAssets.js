@@ -75,7 +75,7 @@ gameInit = function() {
 	init.findLists();
 	
 	$(document).on('touchstart mousedown', function(e){
-		console.log(e,'down');
+		//console.log(e,'down');
 		if(((isTouch)&&(e.type == 'touchstart'))||((!isTouch)&&(e.type != 'touchstart'))) {
 			
 			var ev = e;
@@ -214,7 +214,7 @@ gameInit = function() {
 					$(document).off('touchmove', ui.dragNums).off('touchmove', ui.genDrag).off('touchmove', ui.dragCounter);
 					
 					if(((isTouch)&&(e.type == 'touchend'))||((!isTouch)&&(e.type != 'touchend'))) {
-					console.log(e,'up');
+					//console.log(e,'up');
 
 					//dTools.setRule(e.originalEvent.targetTouches[0].pageY,e.originalEvent.targetTouches[0].pageX);
 
@@ -760,12 +760,16 @@ var init = {
             $(document).on('keydown', bindHotKeys);
             $(document).on('keyup', function(e){
                 if(e.which == 16) { shiftPress = false; }
-                console.log('keyup', e.which);
                 keyFire = true; pointerSrc = false; pointerTgt = false;
             });
         }
 	},
 	buttons: function() {
+
+		$('#playersList button').click(function() {
+			ui.showBoard($(this).text());
+		});
+
 		$('#leaveGameButton').click(function(){
             doPost( { action: 'leaveGame', winner: $('[name="lGwinner"]').val() } );
         });
@@ -1137,6 +1141,24 @@ var ui = {
         $('#phase div').removeClass('active');
         $(this).addClass('active');
         doPost( { action: 'changePhase', phase: to } );
+    },
+    showBoard: function(username) {
+    	var $hide = $();
+    	for(user in playersList) {
+    		$hide = $hide.add($('div[id$="_'+playersList[user]+'"]'));
+    	}
+
+    	console.log($hide);
+
+    	var $show = $('div[id$="_'+username+'"]');
+
+    	$hide.hide();
+    	$show.show();
+    	
+    	$('.deckCount').each(function() {
+			$( this ).addClass( "foo" );
+			if(parseInt($(this).text()) > 0) { $(this).parent().show(); }else{ $(this).parent().hide(); }
+		});
     }
 };
 
@@ -2074,8 +2096,11 @@ startSockets = function() {
 
                 case 'log':
                     //console.log('gameLog', value);
-                    if(value.username == me) { var who = 'player' }
-                    if(value.username == op) { var who = 'opponent' }
+                    if(value.username == me) {
+                    	var who = 'player'
+                	}else{
+                    	var who = 'opponent'
+                    }
 
                     if($('.gLog[data-logid="'+value.logId+'"]').exists()) {
                         $('.gLog[data-logid="'+value.logId+'"]').remove();
@@ -2096,8 +2121,12 @@ startSockets = function() {
                         parent.tabAlert(gSettings.soundAlerts);
                     }
                 
-                    if(value.username == me) { var who = 'player' }
-                    if(value.username == op) { var who = 'opponent' }
+                    if(value.username == me) {
+                    	var who = 'player'
+                	}else{
+                    	var who = 'opponent'
+                    }
+
                     if($('.gChat[data-chatid="'+value.chatId+'"]').exists()) {
                         $('.gChat[data-chatid="'+value.chatId+'"]').remove();
                     }

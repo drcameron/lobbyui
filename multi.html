@@ -55,6 +55,8 @@
                 $('#avatar').css("background-image", "url('http://www.untap.in/img/avatars/"+sData.me.userRow.avatar+"')");
 
                 window.vChatId =  sData.host+''+sData.game.gameId;
+                window.playersList = [];
+
                 if(sData.game.multiplayer > 1) {
 
                     $marker = $('#opponentMarker');
@@ -85,6 +87,10 @@
                             $('<style> '+
                                 "#opdeck_"+sData.opponents[opNum].username+", #opdeck2_"+sData.opponents[opNum].username+" { background-image: url('"+
                                     'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack+"'); }"+' </style>'));
+
+                        $('#playersList').append('<button>'+sData.opponents[opNum].username+'</button>');
+
+                        playersList.push(sData.opponents[opNum].username);
                     }
                     window.op = sData.opponents[1].username;
                     window.opDeckBack = 'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack;
@@ -282,6 +288,10 @@
 
     <div id="outCardLeft"><textarea></textarea></div>
     <div id="outCardRight"><textarea></textarea></div>
+
+    <div id="playersList">
+        
+    </div>
 
     <div id="phase">
         <div data-phase="bp">EOT/Start</div>

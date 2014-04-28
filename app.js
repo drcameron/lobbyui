@@ -126,6 +126,11 @@ window.uiVersion = '7'
     			return;
     		}
 
+    		if(($scope.g.serverStats.s1 == $scope.g.serverStats.s1Full)&&($scope.g.userData.donate != 'true')) {
+    			$scope.gameAlert = { type: 'warning', message: 'No Available Servers' };
+    			return;
+    		}
+
     		var delayStart = function(t) {
     			if(t == 0) {
     				$scope.startTitle = 'Starting Game...';
@@ -520,8 +525,7 @@ window.uiVersion = '7'
 				    return arr.lastIndexOf(e) === i;
 				});
 				$rootScope.$broadcast('doneDeckReload');
-				console.log($scope.decks.deckTypes);
-			})
+			});
 		}
 
     	$scope.fetch = function(obj, count) {
@@ -535,6 +539,7 @@ window.uiVersion = '7'
 	        			delete obj.chat['deleteme'];
 	        			obj.chat[i] = r.chat[i];
 	        			baselineChat();
+
 	        		}else{
 	        			obj.chat[i].gtime = r.chat[i].gtime;
 	        		}
@@ -561,6 +566,13 @@ window.uiVersion = '7'
 		        if(typeof r.user != 'undefined') {
 		        	obj.user = r.user;
 		        }
+
+		        if(typeof obj.userData.inGame == 'object') {
+		        	if(obj.userData.inGame.full == true) {
+			        	soundAlert();
+			        }
+		        }
+		        
 
 	        	window.serverTime = parseInt(r.serverTime);
 
@@ -686,6 +698,37 @@ window.uiVersion = '7'
 		$('#gamesPanel').css({ 'max-height': $('#chatFeed').height()-15 });
 
 		baselineChat();
+    }
+
+    var sndAlert = new Audio("sounds/alert.wav");
+    var canAlert = true;
+    var canSound = true;
+
+    function soundAlert() {
+    	console.log(canAlert);
+    	if(canAlert) {
+    		console.log('alert');
+    		canAlert = false;
+    		if(canSound) {
+    			console.log('withsound');
+    			sndAlert.play();
+    			canSound = false;
+    			setTimeout(function(){ canAlert = true; }, 30000);
+    		}
+    		var link = document.createElement('link');
+    		link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+    		link.href = 'images/32alert.ico';
+    		document.getElementsByTagName('head')[0].appendChild(link);
+    		setTimeout(function() {
+    			canAlert = true;
+    			var link = document.createElement('link');
+    			link.type = 'image/x-icon';
+	            link.rel = 'shortcut icon';
+	    		link.href = 'images/32.ico';
+	    		document.getElementsByTagName('head')[0].appendChild(link);
+    		}, 3000);
+    	}
     }
 
     $(function(){

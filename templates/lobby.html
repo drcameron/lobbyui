@@ -63,7 +63,7 @@
 					<div class="small-12">
 						<div class="row collapse">
 					        <div class="small-12 columns">
-					          <input type="text" id="chatter" ng-keyup="sendChat($event)"/>
+					          <input type="text" id="chatter" ng-keyup="sendChat($event)" autocomplete="off"/>
 					        </div>
 					    </div>
 					</div>
@@ -162,6 +162,7 @@
 				        <select ng-model="newGame.players" required>
 				        	<option value="2">2</option>
 				        	<option value="1">Solo</option>
+				        	<option value="3" ng-if="g.userData.username == 'cokeeffekt'">3</option>
 				        </select>
 				      </label>
 				    </div>

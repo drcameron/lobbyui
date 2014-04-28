@@ -42,31 +42,34 @@
     var okBrowser = ["Chrome 34", "Chrome 35", "Safari 7", "IE 11", "Firefox 28"];
     if(okBrowser.indexOf(window.navigator.sayswho) < 0) {
         //console.log(okBrowser.indexOf(window.navigator.sayswho), 'old browser?');
-        alert('Please update your browser. You current browser version is '+window.navigator.sayswho);
+        alert('Please update your browser. Your current browser version is '+window.navigator.sayswho);
     }
 
     $(function() {
         loadHelp('Initilising Game...');
-        $.post( "http://www.untap.in/apiv2.php", { action: 'browserCatch', browser: window.navigator.sayswho });
 
     	$.post( "http://www.untap.in/apiv2.php",
     		{ action: 'entergame', server: location.hash.replace('#', '') },
     		function(data) {
 
                 loadHelp('Preparing Game Data...');
-				console.log(data);
+
 				window.sData = data;
 
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
 
+
                 if(typeof sData.me == 'undefined') {
-                    alert('Game Data not loaded, Please Report');
+
+                    $.post( "http://www.untap.in/apiv2.php", { action: 'logThis', error: JSON.stringify(sData) });
+
+                    alert('Game Data not loaded, Please Report 447');
                     window.location.href = returnUrl;
                     window.location.assign(returnUrl);
                     return;
                 }
-
+                
 				window.me = sData.me.username;
 				window.meDeckBack = 'http://www.untap.in/backs/'+sData.me.userRow.deckBack;
 
@@ -115,7 +118,7 @@
                 }
 
     			if(sData.isempty) {
-    				alert('Failed to initilise game data');
+    				alert('Failed to initilise game data 667');
 					window.location.href = returnUrl;
 	            	window.location.assign(returnUrl);
     			}
@@ -123,7 +126,7 @@
 				startSockets();
 
 			}, 'json').fail(function() {
-                loadHelp('Failed to initilise game data');
+                loadHelp('Failed to initilise game data 557');
 				alert('Failed to initilise game data');
 				window.location.href = returnUrl;
             	window.location.assign(returnUrl);
