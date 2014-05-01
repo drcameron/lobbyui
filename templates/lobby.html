@@ -163,6 +163,7 @@
 				        	<option value="2">2</option>
 				        	<option value="1">Solo</option>
 				        	<option value="3" ng-if="g.userData.username == 'cokeeffekt'">3</option>
+				        	<option value="4" ng-if="g.userData.username == 'cokeeffekt'">4</option>
 				        </select>
 				      </label>
 				    </div>
@@ -179,7 +180,7 @@
 			<div id="gamesPanel">
 				<div ng-repeat="game in g.gameList" class="row collapse games" ng-class="{'hide': decks.deckTypes.indexOf(game.gameType) == -1}">
 		            <div class="small-10 columns">
-		                <h5 class="greenText">{{game.gameName}} <small>{{game.username}}</small></h5>
+		                <h5 class="greenText">{{game.gameName}} <i>({{game.players}}/{{game.multiplayer}})</i> <small>{{game.username}}</small></h5>
 		            </div>
 		            <div class="small-2 columns">
 		                <a class="button right secondary disabled tiny expand">{{game.gameType}}</a>
@@ -190,7 +191,7 @@
 
 				<div class="row collapse games" ng-repeat="game in g.specList">
 		            <div class="small-10 columns">
-		                <h5>{{game.gameName}} <small>{{game.user1}} vs {{game.user2}}</small></h5>
+		                <h5>{{game.gameName}} <small>{{game.players.0}} vs {{game.players.1}}</small></h5>
 		            </div>
 		            <div class="small-2 columns">
 		                <a class="button right secondary disabled tiny expand">{{game.gameType}}</a>
@@ -290,6 +291,11 @@
 		float: right;
 		margin: 12px;
 	}
+
+	.games h5>i {
+		font-size: 70%;
+	}
+
 	.games .hideJoin {
 	    position: absolute;
 	    top: 0;

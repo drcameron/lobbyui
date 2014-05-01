@@ -101,6 +101,13 @@
                     window.opDeckBack = 'http://www.untap.in/backs/untap.jpg';
                 }
     			
+                window.currentBoard = playersList[0];
+                if(sData.game.multiplayer > 2) {
+                    ui.showBoard(currentBoard);
+                }else{
+                    $('#playersList').hide();
+                }
+
                 //add styles for certain formats
     			var cbStyles = $('<style> '+
     				".card, #deck, #deck2 { background-image: url('"+meDeckBack+"'); } " + 
@@ -179,7 +186,7 @@
         $(function(){
             setTimeout(function(){
                 $('#playsFirst').fadeOut();
-            }, 10000);
+            }, 5000);
         });
     </script>
     <?php } ?>
@@ -190,6 +197,7 @@
             <div id="pileBox" data-umenu="spile"></div>
         </div>
         <div id="bfButtons" class="specHide">
+            <div id="boardShowAll">[+]</div>
             <div id="dice" data-livelements="dice" data-ttip="Dice; Left click roll d20, Right click roll d6">?</div>
             <div data-ttip="Unpivot All" onclick="actions.unPivot($('#battlefield .card.pivoted:not(.op)')); return false;">U</div>
             <div data-ttip="Add Token Card to Play Area" onclick="actions.token()">T</div>
@@ -289,9 +297,7 @@
     <div id="outCardLeft"><textarea></textarea></div>
     <div id="outCardRight"><textarea></textarea></div>
 
-    <div id="playersList">
-        
-    </div>
+    <div id="playersList"></div>
 
     <div id="phase">
         <div data-phase="bp">EOT/Start</div>

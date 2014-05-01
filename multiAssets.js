@@ -980,40 +980,38 @@ var ui = {
 		var taketop = 104;
 		var addleft = 0;
 		c=1;
-		if(!isTouch) {
-			var max = 10;
-		}else{
-			var max = 6;
-		}
+		
+		var max = winHeight-300;
+		
 		if($elem.parent().offset().top > (winHeight/2)) {
-			exList = $($elem.parent().find('.card').get().reverse());
+			var exList = $($elem.parent().find('.card').get().reverse());
 			exList.each(function(i,v){
 				$(v).animate({top: '-='+taketop, left: '+='+addleft }, 'fast');
-				if(c > max) {
+				if(c >= max) {
 					addleft += 75;
 					taketop = 104;
-					c=0;
+					c=1;
 				}else{
-					taketop += 60;
+					taketop += 60
+					c += 60;
 				}
-				c++;
 			});
 		}else{
 			zin = 1;
+			var exList = $elem.parent().find('.card');
 			exList.each(function(i,v){
-				exList = $elem.parent().find('.card');
 				$(v).animate({top: '+='+taketop, left: '+='+addleft }, 'fast').css({'z-index': zin+i});
-				if(c > max) {
+				if(c >= max) {
 					addleft += 75;
 					taketop = 104;
-					c=0;
+					c=1;
 				}else{
 					taketop += 60;
+					c += 60;
 				}
-				c++;
+				
 			});
 		}
-
 	},
 	winResize: function(ignore) {
 		winHeight = $(window).height();
@@ -1143,17 +1141,23 @@ var ui = {
         doPost( { action: 'changePhase', phase: to } );
     },
     showBoard: function(username) {
+
+    	currentBoard = username;
+
     	var $hide = $();
     	for(user in playersList) {
     		$hide = $hide.add($('div[id$="_'+playersList[user]+'"]'));
     	}
 
+    	$hide = $hide.add($('#battlefield .op'));
     	console.log($hide);
 
     	var $show = $('div[id$="_'+username+'"]');
 
-    	$hide.hide();
-    	$show.show();
+    	$show = $show.add($('#battlefield .op[data-ownership="'+username+'"]'));
+
+    	$hide.fadeOut('fast');
+    	$show.fadeIn('fast');
     	
     	$('.deckCount').each(function() {
 			$( this ).addClass( "foo" );
@@ -1766,7 +1770,7 @@ function cardSync(data) {
 	    cardCache.append('<div class="counter">'+data.cardCounter+'<div>');
 	}
 
-	cardCache.attr('data-ownership', data.ownership);
+	cardCache.attr('data-ownership', data.owner);
 	cardCache.addClass('ready');
 
 	if(data.owner != me) {
@@ -1782,7 +1786,7 @@ function cardSync(data) {
 	        });
 	    }
 	}
-	cardCache.attr('data-ownership', data.ownership);
+	cardCache.attr('data-ownership', data.owner);
 	cardCache.attr('data-cardname', data.cardName);
 	cardCache.attr('data-location', data.location).data('location', data.location);
 
@@ -1800,6 +1804,9 @@ function cardSync(data) {
 	    });
 	}
 
+	if((currentBoard != data.owner)&&(data.owner != me)) {
+    	cardCache.fadeOut();
+    }
 
     if(($('#hand .card').length * 74) > $('#hand').width()) {
         var handLap = ((($('#hand .card').length * 74) - $('#hand').width()) / ($('#hand .card').length-1))+1;

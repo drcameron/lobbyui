@@ -569,7 +569,7 @@ window.uiVersion = '7'
 
 		        if(typeof obj.userData.inGame == 'object') {
 		        	if(obj.userData.inGame.full == true) {
-			        	soundAlert();
+			        	sounds.alert();
 			        }
 		        }
 		        
@@ -676,7 +676,7 @@ window.uiVersion = '7'
 	}
 
     function baselineChat() {
-
+    	if(typeof $('#chatFeed')[0] == 'undefined') return;
     	if(($('#chatFeed')[0].scrollHeight != 0)&&($('#chatFeed')[0].scrollHeight-($('#chatFeed').scrollTop()+$('#chatFeed').height()) > 70)) {
     		return false;
     	}
@@ -700,36 +700,44 @@ window.uiVersion = '7'
 		baselineChat();
     }
 
-    var sndAlert = new Audio("sounds/alert.wav");
-    var canAlert = true;
-    var canSound = true;
-
-    function soundAlert() {
-    	console.log(canAlert);
-    	if(canAlert) {
-    		console.log('alert');
-    		canAlert = false;
-    		if(canSound) {
-    			console.log('withsound');
-    			sndAlert.play();
-    			canSound = false;
-    			setTimeout(function(){ canAlert = true; }, 30000);
-    		}
-    		var link = document.createElement('link');
-    		link.type = 'image/x-icon';
-            link.rel = 'shortcut icon';
-    		link.href = 'images/32alert.ico';
-    		document.getElementsByTagName('head')[0].appendChild(link);
-    		setTimeout(function() {
-    			canAlert = true;
-    			var link = document.createElement('link');
-    			link.type = 'image/x-icon';
-	            link.rel = 'shortcut icon';
-	    		link.href = 'images/32.ico';
-	    		document.getElementsByTagName('head')[0].appendChild(link);
-    		}, 3000);
-    	}
+    tabHidden = function() {
+        var l = ['hidden', 'mozHidden', 'msHidden', 'webkitHidden'];
+        for(c in l) { if(typeof document[l[c]] !== "undefined") { return document[l[c]]; } }
     }
+
+    var sounds = {
+        sndAlert: new Audio("sounds/alert.wav"),
+        canAlert: true,
+        canSound: true,
+        pullforward: false,
+        alert: function() {
+            if(tabHidden()) return false;
+            if(sounds.canAlert) {
+                sounds.canAlert = false;
+                if(sounds.canSound) {
+                    sounds.sndAlert.play();
+                    sounds.canSound = false;
+                    setTimeout(function(){ canAlert = true; }, 30000);
+                }
+                var link = document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = 'images/32alert.ico';
+                document.getElementsByTagName('head')[0].appendChild(link);
+                setTimeout(function() {
+                    sounds.canAlert = true;
+                    var link = document.createElement('link');
+                    link.type = 'image/x-icon';
+                    link.rel = 'shortcut icon';
+                    link.href = 'images/32.ico';
+                    document.getElementsByTagName('head')[0].appendChild(link);
+                }, 3000);
+            }
+        }
+    }
+    
+
+    
 
     $(function(){
     	window.onresize = function(event) {

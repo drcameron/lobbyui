@@ -976,40 +976,38 @@ var ui = {
 		var taketop = 104;
 		var addleft = 0;
 		c=1;
-		if(!isTouch) {
-			var max = 10;
-		}else{
-			var max = 6;
-		}
+		
+		var max = winHeight-300;
+		
 		if($elem.parent().offset().top > (winHeight/2)) {
-			exList = $($elem.parent().find('.card').get().reverse());
+			var exList = $($elem.parent().find('.card').get().reverse());
 			exList.each(function(i,v){
 				$(v).animate({top: '-='+taketop, left: '+='+addleft }, 'fast');
-				if(c > max) {
+				if(c >= max) {
 					addleft += 75;
 					taketop = 104;
-					c=0;
+					c=1;
 				}else{
-					taketop += 60;
+					taketop += 60
+					c += 60;
 				}
-				c++;
 			});
 		}else{
 			zin = 1;
+			var exList = $elem.parent().find('.card');
 			exList.each(function(i,v){
-				exList = $elem.parent().find('.card');
 				$(v).animate({top: '+='+taketop, left: '+='+addleft }, 'fast').css({'z-index': zin+i});
-				if(c > max) {
+				if(c >= max) {
 					addleft += 75;
 					taketop = 104;
-					c=0;
+					c=1;
 				}else{
 					taketop += 60;
+					c += 60;
 				}
-				c++;
+				
 			});
 		}
-
 	},
 	winResize: function(ignore) {
 		winHeight = $(window).height();
