@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '7'
+window.uiVersion = '8'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {

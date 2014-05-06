@@ -165,6 +165,31 @@
         bottom: 120%;
     }
 
+    .boardPreview {
+        width: 629px;
+        height: 206px;
+        float: left;
+        position: relative;
+        background: rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: none;
+    }
+
+    .boardPreview .card {
+        width: 37px;
+        height: 51px;
+        position: absolute;
+        left: 49%;
+        top: 120%;
+        -webkit-transition:-webkit-transform 250ms linear;
+        -moz-transition:-moz-transform 250ms linear;
+        -ms-transition:-ms-transform 250ms linear;
+        -o-transition:-o-transform 250ms linear;
+        transition:transform 250ms linear;
+        z-index: 1;
+    }
+
+    .boardPreview .card input { display: none;}
     #bfButtons {
         position: absolute;
         bottom: 24px;
@@ -252,7 +277,7 @@
 
     #gameLog b { text-transform: capitalize; }
     #gameLog b.player { color: #B6D4E7; }
-    #gameLog b.opponent { color: #EDCBC9; }
+    #gameLog b.opponent { color: #EDCBC9; cursor: pointer; }
 
     #gameLog i {
         color: #C0DA90;
@@ -968,10 +993,48 @@
     #phase div {
         background-color: black;
         color: #c8c8c8;
-        padding: 3px 0;
+        padding: 0;
         text-align: center;
         opacity: 0.5;
         cursor: pointer;
+        width: 16px;
+        margin: 0;
+        display: inline-block;
+    }
+
+    #phase button.turn {
+        color: orange;
+    }
+
+    #phase span {
+        width: 100%;
+        display: block;
+        background-color: black;
+        color: #C0DA90;
+        text-align: center;
+    }
+
+    #phase button {
+        width: 100%;
+        background-color: black;
+        color: #c8c8c8;
+        box-shadow: 0 0;
+        margin: 0;
+        text-transform: capitalize;
+        opacity: 0.9;
+    }
+
+    #phase button:first-child {
+        border-top-right-radius: 5px;
+    }
+
+    #phase button:last-child {
+        border-bottom-right-radius: 5px;
+    }
+
+    #phase button:hover {
+        color: #C0DA90;
+        opacity: 1;
     }
 
     #phase div:hover {
@@ -984,14 +1047,6 @@
         color: #C0DA90;
         opacity: 1;
         color: black;
-    }
-
-    #phase div:first-child {
-        border-top-right-radius: 5px;
-    }
-
-    #phase div:last-child {
-        border-bottom-right-radius: 5px;
     }
 
     #new-link-line {

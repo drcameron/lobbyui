@@ -39,7 +39,7 @@
     //global vars
     window.returnUrl = '/lobbyui'
     
-    var okBrowser = ["Chrome 34", "Chrome 35", "Safari 7", "IE 11", "Firefox 28", "Opera 20"];
+    var okBrowser = ["Chrome 34", "Chrome 35", "Safari 7", "IE 11", "Firefox 28", "Firefox 29", "Opera 20"];
     if(okBrowser.indexOf(window.navigator.sayswho) < 0) {
         //console.log(okBrowser.indexOf(window.navigator.sayswho), 'old browser?');
         alert('Please update your browser. Your current browser version is '+window.navigator.sayswho);
@@ -118,7 +118,7 @@
                 }
 
     			if(sData.isempty) {
-    				alert('Failed to initilise game data 667');
+    				alert('Failed to initialise game data 667');
 					window.location.href = returnUrl;
 	            	window.location.assign(returnUrl);
     			}
@@ -126,8 +126,8 @@
 				startSockets();
 
 			}, 'json').fail(function() {
-                loadHelp('Failed to initilise game data 557');
-				alert('Failed to initilise game data');
+                loadHelp('Failed to initialise game data 557');
+				alert('Failed to initialise game data');
 				window.location.href = returnUrl;
             	window.location.assign(returnUrl);
 			});

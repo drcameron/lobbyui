@@ -53,6 +53,14 @@ gameInit = function() {
         showBall: 'false'
     };
 
+    window.turnStates = {
+    	bp: 'Start',
+		fmp: 'First',
+		cp: 'Attack',
+		smp: 'Second',
+		et: 'End'
+    }
+
 
     window.gsTimer = new Date().getTime();
 
@@ -385,6 +393,15 @@ gameInit = function() {
 	    }
 	}, "[data-ttip]");
 
+	$(document).on({
+	    mouseenter: function () {
+	         var tempCurrentBoard = currentBoard;
+	         $(this).one('mouseleave', function(){
+	         	ui.showBoard(tempCurrentBoard, true);
+	         });
+	         ui.showBoard($(this).text(), true);
+	    }
+	}, ".gLog b.opponent");
 }
 
 
@@ -604,7 +621,7 @@ var init = {
         });
         $('#opfindCardGo').click(function(){
             if($('.opfindCardList').val() == 'none') return false;
-                doPost( { action: 'opSelect', selected: $('.opfindCardList').val() });
+                doPost( { action: 'opSelect', selected: $('.opfindCardList').val(), opponent: currentBoard });
                 ui.oppopDeckMenu('close');
         });
 
@@ -766,7 +783,7 @@ var init = {
 	},
 	buttons: function() {
 
-		$('#playersList button').click(function() {
+		$('#phase button').click(function() {
 			ui.showBoard($(this).text());
 		});
 
@@ -1131,7 +1148,7 @@ var ui = {
 	},
 	resAlert: function() {
 		$('#resAlert').css("background-color", 'red');
-        doPost( { action: 'resAlert'});
+        doPost( { action: 'resAlert'} );
 	},
 	actChangePhase: function() {
         if(spectate == true) return false;
@@ -1140,8 +1157,9 @@ var ui = {
         $(this).addClass('active');
         doPost( { action: 'changePhase', phase: to } );
     },
-    showBoard: function(username) {
-
+    showBoard: function(username, quick) {
+    	quick = typeof b !== 'undefined' ? quick : false;
+    	if(username == me) return false;
     	currentBoard = username;
 
     	var $hide = $();
@@ -1149,20 +1167,33 @@ var ui = {
     		$hide = $hide.add($('div[id$="_'+playersList[user]+'"]'));
     	}
 
-    	$hide = $hide.add($('#battlefield .op'));
+    	$hide = $hide.add($('#battlefield>.op'));
     	console.log($hide);
 
     	var $show = $('div[id$="_'+username+'"]');
 
-    	$show = $show.add($('#battlefield .op[data-ownership="'+username+'"]'));
+    	$show = $show.add($('#battlefield>.op[data-ownership="'+username+'"]'));
 
-    	$hide.fadeOut('fast');
-    	$show.fadeIn('fast');
+    	if(quick) {
+    		$hide.hide();
+    		$show.show();
+    	}else{
+    		$hide.fadeOut('fast');
+    		$show.fadeIn('fast');
+    	}
+    	
     	
     	$('.deckCount').each(function() {
 			$( this ).addClass( "foo" );
 			if(parseInt($(this).text()) > 0) { $(this).parent().show(); }else{ $(this).parent().hide(); }
 		});
+
+    	$opHandCard = $('#ophand_'+username+' .card');
+    	$opHand = $('#ophand_'+username);
+		if(($opHandCard.length * 74) > $opHand.width()) {
+	        var handLap = ((($opHandCard.length * 74) - $opHand.width()) / ($opHandCard.length-1))+1;
+	        $('#ophand_'+username+' .card:not(:first-child)').stop().animate({ marginLeft: -Math.abs(handLap) });
+	    }
     }
 };
 
@@ -1451,7 +1482,7 @@ var menuFunc = {
 		func: function(elem) {
 			$(".opfindCardList, #opfindCardGo").prop('disabled', true);
 	        ui.oppopDeckMenu('opfindCard');
-	        doPost( { action: 'opfindCard'});
+	        doPost( { action: 'opfindCard', opponent: currentBoard } );
 		},
 		tip: 'Find',
 		sprite: 4
@@ -1612,7 +1643,6 @@ var chatter = {
             break;
         }
     }
-
 }
 
 var M = {
@@ -1676,6 +1706,7 @@ function cardSync(data) {
 	    if(data.location == 'deck2') return false;
 	    if(data.location == 'battlefield') {
 	        $('#battlefield').append('<div class="card" data-cardid="'+cardid+'"></div>');
+	        $('#battlefield .boardPreview').append('<div class="card" data-cardid="'+cardid+'"></div>');
 	    }else{
 	        if(data.owner != me) {
 	            $('#op'+data.location+'_'+data.owner).append('<div class="card" data-cardid="'+cardid+'"></div>');
@@ -1724,7 +1755,10 @@ function cardSync(data) {
 	    
 	    if(!cardCache.hasClass('dragging')) {
 	        if(data.owner != me) {
-	            cardCache.animate({bottom: data.posTop, left: data.posLeft });
+	            cardCache.not('.boardPreview>.card').animate({bottom: data.posTop, left: data.posLeft });
+	            if(sData.game.multiplayer > 2) {
+	            	cardCache.not('#battlefield>.card').animate({bottom: (data.posTop/2)-206, left: data.posLeft/2 });
+	            }
 	        }else{
 	            cardCache.animate({top: data.posTop, left: data.posLeft });
 	        }
@@ -1804,7 +1838,7 @@ function cardSync(data) {
 	    });
 	}
 
-	if((currentBoard != data.owner)&&(data.owner != me)) {
+	if((currentBoard != data.owner)&&(data.owner != me)&&(data.location == "battlefield")) {
     	cardCache.fadeOut();
     }
 
@@ -1813,9 +1847,11 @@ function cardSync(data) {
         $('#hand .card:not(:first-child)').stop().animate({ marginLeft: -Math.abs(handLap) });
     }
 
-    if(($('#ophand .card').length * 74) > $('#ophand').width()) {
-        var handLap = ((($('#ophand .card').length * 74) - $('#ophand').width()) / ($('#ophand .card').length-1))+1;
-        $('#ophand .card:not(:first-child)').stop().animate({ marginLeft: -Math.abs(handLap) });
+    $opHandCard = $('#ophand_'+currentBoard+' .card');
+	$opHand = $('#ophand_'+currentBoard);
+	if(($opHandCard.length * 74) > $opHand.width()) {
+        var handLap = ((($opHandCard.length * 74) - $opHand.width()) / ($opHandCard.length-1))+1;
+        $('#ophand_'+currentBoard+' .card:not(:first-child)').stop().animate({ marginLeft: -Math.abs(handLap) });
     }
 }
 
@@ -2057,17 +2093,33 @@ startSockets = function() {
                 break;
 
                 case 'phase':
+
+                	console.log(value);
                     $('#swing').hide();
                     $('#phase div').removeClass('active');
+                    
+                    if(value.phase == null) value.phase = 'bp';
+
                     $('#phase div[data-phase="'+value.phase+'"]').addClass('active');
                     if(value.phase == 'cp') {
                         $('#swing').show();
                         $('#swing').val('');
                     }
+                    $("#phase span").remove();
+                    $("#phase button").removeClass('turn');
                     if(value.turn == 'op') {
                         $('#phase div').off('click touchend', ui.actChangePhase);
-                        $('#phase').animate({bottom: ($('#playObjects').height()-$('#phase').height()-5)}).addClass('opTurn').removeClass('myTurn');
                         $('#swing').prop('disabled', true);
+                        $('#phase div').css('display', 'none');
+
+                        
+                        var tPhase = turnStates[value.phase];
+                        
+                        $("#phase button").filter(function() {
+  							return $(this).text() == value.username;
+						}).addClass('turn').after('<span>'+tPhase+'</span>');
+                        //$("#phase button:contains('"+value.username+"')");
+                        $('#phase').animate({bottom: ($('#playObjects').height()-$('#phase').height()-5)}).addClass('opTurn').removeClass('myTurn');
                     }else{
                         if($('#phase').hasClass('opTurn')) {
                             if(spectate == false) {
@@ -2075,8 +2127,9 @@ startSockets = function() {
                             }
                         }
                         $('#phase div').off('click touchend', ui.actChangePhase).on('click touchend', ui.actChangePhase);
-                        $('#phase').animate({bottom: 5}).addClass('myTurn').removeClass('opTurn');
                         $('#swing').prop('disabled', false);
+                        $('#phase div').css('display', 'inline-block');
+                        $('#phase').animate({bottom: 5}).addClass('myTurn').removeClass('opTurn');
                     }
                 break;
 
@@ -2284,6 +2337,7 @@ function loadHelp(text) {
 }
 
 function doPost(data, func) {
+	numPress = 1;
     data.sendid = ui.makeid();
     console.log(data);
     ws.send(JSON.stringify(data));

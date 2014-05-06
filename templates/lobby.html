@@ -80,7 +80,7 @@
 		<div class="panel" ng-if="g.userData.inGame != ''">
 			<div class="row collapse">
 				<div class="small-9 columns">
-					<h4>{{g.userData.inGame.game.gameType}}: <i>{{g.userData.inGame.game.gameName}}</i></h4>
+					<h4>{{g.userData.inGame.game.gameType}}: <i>{{g.userData.inGame.game.gameName}} ({{g.userData.inGame.playerCount}}/{{g.userData.inGame.game.multiplayer}})</i></h4>
 				</div>
 				<div class="small-3 columns" ng-if="g.userData.inGame.gameStatus != 'ingame'">
 					<a ng-click="leaveGame()" class="button expand tiny secondary"><i class="fi-x"></i> Leave</a>
