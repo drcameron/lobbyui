@@ -31,7 +31,7 @@
 			<textarea placeholder="Deck 2 Cards, list format" style="height: 300px;" ng-model="deck.textdeck.main2"></textarea>
 		</label>
 
-    	<label ng-if="deck.type == 'MTG'">Sideboard
+    	<label ng-if="deck.type == 'MTG' || deck.type == 'UFS'">Sideboard
     		<helptip tip="Sideboard cards can be swapped for mainboard cards via the game menu when in game."></helptip>
 			<textarea placeholder="Sideboard Cards, list format" style="height: 125px;" ng-model="deck.textdeck.sb">
 			</textarea>
