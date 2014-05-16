@@ -99,7 +99,7 @@
 			<div class="row">
 			    <div class="small-12 columns">
 			    	<a class="button expand small disabled" ng-if="g.userData.inGame.full != true">Waiting for Players...</a>
-			    	<a ng-click="goTo('/lobbyui/game.html')" class="button expand small" ng-if="g.userData.inGame.full == true">Enter Game</a>
+			    	<a ng-click="goTo('/lobbyui/multi.html')" class="button expand small" ng-if="g.userData.inGame.full == true">Enter Game</a>
 
 			    </div>
 			</div>
@@ -162,8 +162,10 @@
 				        <select ng-model="newGame.players" required>
 				        	<option value="2">2</option>
 				        	<option value="1">Solo</option>
-				        	<option value="3" ng-if="g.userData.username == 'cokeeffekt'">3</option>
-				        	<option value="4" ng-if="g.userData.username == 'cokeeffekt'">4</option>
+				        	<option value="3">3</option>
+				        	<option value="4">4</option>
+				        	<option value="5" ng-if="g.userData.donate == 'true'">5</option>
+				        	<option value="6" ng-if="g.userData.donate == 'true'">6</option>
 				        </select>
 				      </label>
 				    </div>
@@ -191,16 +193,17 @@
 
 				<div class="row collapse games" ng-repeat="game in g.specList">
 		            <div class="small-10 columns">
-		                <h5>{{game.gameName}} <small>{{game.players.0}} vs {{game.players.1}}</small></h5>
+		                <h5 ng-if="game.players.length == 2">{{game.gameName}} <small>{{game.players.0}} vs {{game.players.1}}</small></h5>
+		                <h5 ng-if="game.players.length > 2">{{game.gameName}} <small>{{game.players.0}} Multiplayer</small></h5>
 		            </div>
 		            <div class="small-2 columns">
 		                <a class="button right secondary disabled tiny expand">{{game.gameType}}</a>
 		            </div>
-		            <a ng-click="goTo('/lobbyui/game.html#' + game.host)" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
+		            <a ng-click="goTo('/lobbyui/multi.html#' + game.host)" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
 		        </div>
 	        </div>
 		</div>
-		<p id="serverStats"><b>S1:</b> {{g.serverStats.s1}}/{{g.serverStats.s1Full}} <b>S2:</b> {{g.serverStats.s2}}/{{g.serverStats.s2Full}} <small><i>(S2 Funders Only)</i></small></p>
+		<p id="serverStats" ng-if="g.userData.inGame == ''"><b>S1:</b> {{g.serverStats.s1}}/{{g.serverStats.s1Full}} <b>S2:</b> {{g.serverStats.s2}}/{{g.serverStats.s2Full}} <small><i>(S2 Funders Only)</i></small></p>
 	</div>
 </div>
 <script type="text/javascript">

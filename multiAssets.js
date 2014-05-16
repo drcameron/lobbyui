@@ -42,7 +42,7 @@ gameInit = function() {
     window.delayPost = [];
     window.counterDrag = 0;
 
-    window.allcards = [];
+    window.allcards = {};
 
     window.gSettings = {
         soundAlerts: 'true',
@@ -146,7 +146,6 @@ gameInit = function() {
 			}
 
 			if($(ev.target).is('#battlefield .card .counter:not(#battlefield .card.op .counter)')) {
-				console.log('counter here');
 				if(e.type == 'touchstart') {
 					$(ev.target).data('originalVal', parseInt($(ev.target).text()));
 					$(document).on('touchmove', { startEvent:ev }, ui.dragCounter).one('touchend', function() {
@@ -267,13 +266,13 @@ gameInit = function() {
 
 
 					if(($(ev.target).is('#battlefield .card .counter:not(#battlefield .card.op .counter)'))&&(e.type == 'mouseup')) {
-						var counter = parseInt($(ev.target).parent().find('.counter').text());
+						var counter = parseInt($(ev.target).text());
 						if(e.button == 0) {
 							counter += 1;
 						}else{
 							counter -= 1;
 						}
-						$(ev.target).parent().find('.counter').text(counter);
+						$(ev.target).text(counter);
 						$(ev.target).one('mouseleave', function(){
 							actions.counterChange($(ev.target).parent());
 						});
@@ -315,6 +314,9 @@ gameInit = function() {
 
 								if($elem.hasClass('tokenCard')) {
 									menuType = 'tokenCard';
+								}
+								if($elem.hasClass('counterCard')) {
+									menuType = 'counterCard';
 								}
 
 								if($elem.hasClass('op')) {
@@ -395,13 +397,19 @@ gameInit = function() {
 
 	$(document).on({
 	    mouseenter: function () {
+	         ui.showBoard($(this).data('previewowner'));
+	    }
+	}, ".boardPreview");
+
+	$(document).on({
+	    mouseenter: function () {
 	         var tempCurrentBoard = currentBoard;
 	         $(this).one('mouseleave', function(){
 	         	ui.showBoard(tempCurrentBoard, true);
 	         });
 	         ui.showBoard($(this).text(), true);
 	    }
-	}, ".gLog b.opponent");
+	}, ".gLog b");
 }
 
 
@@ -495,14 +503,24 @@ var actions = {
 	},
 	counterChange: function(card) {
 		var cardid = card.data('cardid');
+		if(card.hasClass('counterCard')) {
+			var sCount = card.find('.counter').map(function() { return $(this).text(); }).get().join();
+			var sendData = { action: 'cardCounter', cardid: cardid, counter: sCount };
+		}else{
+			var sendData = { action: 'cardCounter', cardid: cardid, counter: card.find('.counter').text() };
+		}
 		clearTimeout(delayPost[cardid+'_counter']);
 		delayPost[cardid+'_counter'] = setTimeout(function() {
-			doPost( { action: 'cardCounter', cardid: cardid, counter: card.find('.counter').text() });
+			doPost(sendData);
 		}, 500);
 	},
 	token: function() {
 		var cardid = ui.makeid();
         doPost( { action: 'token', cardid: cardid} );
+	},
+	counterCard: function() {
+		var cardid = ui.makeid();
+        doPost( { action: 'counterCard', cardid: cardid} );
 	},
 	cardClone: function(card) {
 		if(card.hasClass('tokenCard')) return false;
@@ -788,7 +806,8 @@ var init = {
 		});
 
 		$('#leaveGameButton').click(function(){
-            doPost( { action: 'leaveGame', winner: $('[name="lGwinner"]').val() } );
+			$('#leaveGameButton').prop('disabled', true);
+            doPost( { action: 'leaveGame', winner: $('[name="lGwinner"]').val(), comments: $('[name="lGcomments"]').val() } );
         });
         $('#changeDeckButton').click(function() {
             doPost( { action: 'swapDeck', deckid: $('[name="chDeck"]').val() });
@@ -920,6 +939,7 @@ var ui = {
         }
 	},
 	cardView : function(card) {
+		
 		if($('textarea').is(':focus')) return false;
 		if(card == 'close') {
             $outCardLeft.removeClass('in');
@@ -928,7 +948,15 @@ var ui = {
             $outCardLeft.add($outCardRight).find('textarea').hide();
 			return true;
 		}
+
 		if(!card.hasClass('card')) return false;
+
+		var cardid = card.data('cardid');
+		if(card.hasClass('cardPreview')) {
+			card = $('div[data-cardid="'+cardid+'"]').not('.cardPreview');
+			console.log(card);
+		}
+
 		if(card.data('location') == 'battlefield') {
 			//console.log(card.find('textarea'));
 			if(card.find('textarea').length > 0) {
@@ -938,7 +966,7 @@ var ui = {
 				$tNotes.val($cNotes.val()).show().off('keyup change').on('keyup', function() {
 					$cNotes.val($(this).val());
 				}).on('change', function() {
-					doPost( { action: 'upNotes', cardid: card.data('cardid'), value: $(this).val() });
+					doPost( { action: 'upNotes', cardid: cardid, value: $(this).val() });
 				});
 			}else{
 				$outCardLeft.add($outCardRight).find('textarea').hide();
@@ -947,7 +975,7 @@ var ui = {
 		var bg = card.css('background-image');
 		card.addClass('activeMenu');
         if((String(bg).search('/backs/') == -1)||(card.find('textarea').length > 0)) {
-        	$outCardRight.css('background-image', bg).data('currentCardid', card.data('cardid')).addClass('in');
+        	$outCardRight.css('background-image', bg).data('currentCardid', cardid).addClass('in');
         }
 	},
 	logView: function(card) {
@@ -961,6 +989,11 @@ var ui = {
 		}
 		if(!card.hasClass('card')) return false;
 
+		var cardid = card.data('cardid');
+		if(card.hasClass('cardPreview')) {
+			card = $('div[data-cardid="'+cardid+'"]').not('.cardPreview');
+		}
+
 		if(card.data('location') == 'battlefield') {
 			//console.log(card.find('textarea'));
 			if(card.find('textarea').length > 0) {
@@ -970,7 +1003,7 @@ var ui = {
 				$tNotes.val($cNotes.val()).show().off('keyup change').on('keyup', function() {
 					$cNotes.val($(this).val());
 				}).on('change', function() {
-					doPost( { action: 'upNotes', cardid: card.data('cardid'), value: $(this).val() });
+					doPost( { action: 'upNotes', cardid: cardid, value: $(this).val() });
 				});
 			}else{
 				$outCardLeft.add($outCardRight).find('textarea').hide();
@@ -978,7 +1011,7 @@ var ui = {
 		}
 		var bg = card.css('background-image');
         if((String(bg).search('/backs/') == -1)||(card.find('textarea').length > 0)) {
-        	$outCardLeft.css('background-image', bg).data('currentCardid', card.data('cardid')).addClass('in');
+        	$outCardLeft.css('background-image', bg).data('currentCardid', cardid).addClass('in');
         }
 	},
 	closePile: function() {
@@ -1101,8 +1134,8 @@ var ui = {
 	    });
 	},
 	arrows: function(src,target) {
-		var srcTarget = $('div[data-cardid="'+target+'"]');
-        var srcCache = $('div[data-cardid="'+src+'"]');
+		var srcTarget = $('#battlefield .boardPreview div[data-cardid="'+target+'"]');
+        var srcCache = $('#battlefield div[data-cardid="'+src+'"]');
         if(target != 'me' && target != 'player0000') {
             if(srcTarget.length == 0 || srcCache.length == 0) {
                 setTimeout(function(){
@@ -1119,6 +1152,7 @@ var ui = {
             tarX = 0; tarY = 1258;
         }else{
             var sTp = srcTarget.position();
+
             tarX = (sTp.top)/bfZoom+51;
             tarY = (sTp.left)/bfZoom+37;
         }
@@ -1157,9 +1191,25 @@ var ui = {
         $(this).addClass('active');
         doPost( { action: 'changePhase', phase: to } );
     },
+    previewBoard: function() {
+    	if(sData.game.multiplayer < 3) return false;
+
+    	if($('.boardPreview').is(':visible')) {
+    		$('.boardPreview').hide();
+    		$('#battlefield>.tmphide').removeClass('tmphide');
+    		console.log(currentBoard);
+  			ui.showBoard(currentBoard, true);
+    	} else {
+    		$('.boardPreview').show();
+    		$('#battlefield>.op').addClass('tmphide');
+    	}
+    },
     showBoard: function(username, quick) {
-    	quick = typeof b !== 'undefined' ? quick : false;
+    	if(sData.game.multiplayer < 3) return false;
+
+    	quick = typeof quick !== 'undefined' ? quick : false;
     	if(username == me) return false;
+    	
     	currentBoard = username;
 
     	var $hide = $();
@@ -1168,7 +1218,7 @@ var ui = {
     	}
 
     	$hide = $hide.add($('#battlefield>.op'));
-    	console.log($hide);
+    	
 
     	var $show = $('div[id$="_'+username+'"]');
 
@@ -1276,6 +1326,10 @@ var menuMap = {
 	},
 	tokenCard: {
 		list: ['pivot', 'rotate', 'discard', 'counter', 'cloneToken'],
+		setup: {start: 180, deg: 180, rad: 50 }
+	},
+	counterCard: {
+		list: ['pivot', 'rotate', 'discard', 'cloneToken'],
 		setup: {start: 180, deg: 180, rad: 50 }
 	}
 
@@ -1705,8 +1759,9 @@ function cardSync(data) {
 	    if(data.location == 'deck') return false;
 	    if(data.location == 'deck2') return false;
 	    if(data.location == 'battlefield') {
+	    	console.log(cardid, 'create card');
 	        $('#battlefield').append('<div class="card" data-cardid="'+cardid+'"></div>');
-	        $('#battlefield .boardPreview').append('<div class="card" data-cardid="'+cardid+'"></div>');
+	        $('#battlefield .boardPreview[data-previewowner="'+data.owner+'"]').append('<div class="card cardPreview" data-cardid="'+cardid+'"></div>');
 	    }else{
 	        if(data.owner != me) {
 	            $('#op'+data.location+'_'+data.owner).append('<div class="card" data-cardid="'+cardid+'"></div>');
@@ -1727,11 +1782,14 @@ function cardSync(data) {
 
 	if(data.owner != me) {
 	    if(!cardCache.hasClass('op')) {
-	        var klone = $('div[data-cardid="'+cardid+'"]').clone(false);
-	        var cardParent = cardCache.parent();
-	        klone.addClass('op');
-	        $('div[data-cardid="'+cardid+'"]:not(.op)').remove();
-	        klone.appendTo(cardParent);
+	    	$('#battlefield>div[data-cardid="'+cardid+'"]').each(function(){
+	    		var klone = $(this).clone(false);
+		        var cardParent = $(this).parent();
+		        klone.addClass('op');
+		        $(this).remove();
+		        klone.appendTo(cardParent);
+		        
+	    	});
 	        cardCache = $('div[data-cardid="'+cardid+'"]');
 	    }
 	}
@@ -1783,12 +1841,33 @@ function cardSync(data) {
 
 	if(typeof data.notes != 'undefined') {
 	    var $notes = $('<textarea class="notes">'+data.notes+'</textarea>');
-	    cardCache.append($notes);
+	    cardCache.not('.boardPreview>.card').append($notes);
+	}
+
+	if(data.slug == 'counter-card') {
+		console.log(data);
+		cardCache.addClass('counterCard');
+
+		for(cn in data.cNames) {
+			cardCache.not('.boardPreview>.card')
+				.append('<input type="text" data-cName="'+cn+'" value="'+data.cNames[cn]+'" maxlength="10">')
+				.append('<div class="counter" data-cNum="'+cn+'">'+data.cNums[cn]+'<div>');
+		}
+
+		if(data.owner == me) {
+	        cardCache.find('input').focus(function(){ keepOldVal = $(this).val(); $(this).val(''); })
+	        .blur(function() {if($(this).val() == '') { $(this).val(keepOldVal); }})
+	        .change(function(){
+	        	var sText = cardCache.find('input').map(function() { return $(this).val(); }).get().join();
+	            doPost( { action: 'upCounterCard', cardid: $(this).closest('.card').data('cardid'), value: sText });
+	        });
+	    }
+		
 	}
 
 	if(data.slug == 'token-card') {
 	    cardCache.addClass('tokenCard');
-	    cardCache.append('<input type="text" class="tStat" value="'+data.tStat+'" maxlength="5">')
+	    cardCache.not('.boardPreview>.card').append('<input type="text" class="tStat" value="'+data.tStat+'" maxlength="5">')
 	            .append('<input type="text" class="tName" value="'+data.tName+'" maxlength="10">');
 
 	    if(data.owner == me) {
@@ -1800,7 +1879,8 @@ function cardSync(data) {
 	    }
 	}
 
-	if(typeof data.cardCounter != 'undefined') {
+	if((typeof data.cardCounter != 'undefined')&&(data.slug != 'counter-card')) {
+
 	    cardCache.append('<div class="counter">'+data.cardCounter+'<div>');
 	}
 
@@ -1839,7 +1919,7 @@ function cardSync(data) {
 	}
 
 	if((currentBoard != data.owner)&&(data.owner != me)&&(data.location == "battlefield")) {
-    	cardCache.fadeOut();
+    	cardCache.not('.boardPreview>.card').fadeOut();
     }
 
     if(($('#hand .card').length * 74) > $('#hand').width()) {
@@ -1856,6 +1936,12 @@ function cardSync(data) {
 }
 
 var bindHotKeys = function(e) {
+
+	if(e.which == 9) {
+		ui.previewBoard();
+		return false;
+	}
+
     if(e.which == 27) { // ESC
         if($('.popBox').is(':visible')) {
             ui.popBox('close');
@@ -1917,6 +2003,11 @@ var bindHotKeys = function(e) {
         if(e.which == 82) {
             if(currentHover.data('location') != 'hand') {
                 actions.common(currentHover, 'ReturnToHand'); return false;
+            }else{
+            	var cardParent = currentHover.parent();
+            	var klone = currentHover.clone(false);
+            	currentHover.remove();
+				klone.appendTo(cardParent);
             }
         } // R return to hand
         if(e.which == 83) { actions.common(currentHover, 'expel'); return false; } // S Expel
@@ -2101,10 +2192,7 @@ startSockets = function() {
                     if(value.phase == null) value.phase = 'bp';
 
                     $('#phase div[data-phase="'+value.phase+'"]').addClass('active');
-                    if(value.phase == 'cp') {
-                        $('#swing').show();
-                        $('#swing').val('');
-                    }
+                    
                     $("#phase span").remove();
                     $("#phase button").removeClass('turn');
                     if(value.turn == 'op') {
@@ -2114,6 +2202,10 @@ startSockets = function() {
 
                         
                         var tPhase = turnStates[value.phase];
+
+                        if(value.phase == 'bp') {
+                        	ui.showBoard(value.username);
+                        }
                         
                         $("#phase button").filter(function() {
   							return $(this).text() == value.username;
@@ -2121,6 +2213,12 @@ startSockets = function() {
                         //$("#phase button:contains('"+value.username+"')");
                         $('#phase').animate({bottom: ($('#playObjects').height()-$('#phase').height()-5)}).addClass('opTurn').removeClass('myTurn');
                     }else{
+
+                    	if(value.phase == 'cp') {
+	                        $('#swing').show();
+	                        $('#swing').val('');
+	                    }
+
                         if($('#phase').hasClass('opTurn')) {
                             if(spectate == false) {
                                 parent.tabAlert(gSettings.soundAlerts);
@@ -2157,9 +2255,14 @@ startSockets = function() {
                 case 'log':
                     //console.log('gameLog', value);
                     if(value.username == me) {
-                    	var who = 'player'
+                    	var who = 'player';
                 	}else{
-                    	var who = 'opponent'
+                    	var who = 'opponent';
+                    	for(opNum in sData.opponents) {
+	                    	if(value.username == sData.opponents[opNum].username) {
+	                    		who = 'pcolor'+opNum;
+	                    	}
+	                    }
                     }
 
                     if($('.gLog[data-logid="'+value.logId+'"]').exists()) {
@@ -2184,7 +2287,12 @@ startSockets = function() {
                     if(value.username == me) {
                     	var who = 'player'
                 	}else{
-                    	var who = 'opponent'
+                    	var who = 'opponent';
+                    	for(opNum in sData.opponents) {
+	                    	if(value.username == sData.opponents[opNum].username) {
+	                    		who = 'pcolor'+opNum;
+	                    	}
+	                    }
                     }
 
                     if($('.gChat[data-chatid="'+value.chatId+'"]').exists()) {
@@ -2334,6 +2442,41 @@ window.navigator.sayswho = (function(){
 
 function loadHelp(text) {
 	$('#loadHelp').text(text);
+}
+
+tabHidden = function() {
+        var l = ['hidden', 'mozHidden', 'msHidden', 'webkitHidden'];
+        for(c in l) { if(typeof document[l[c]] !== "undefined") { return document[l[c]]; } }
+    }
+var sounds = {
+    sndAlert: new Audio("sounds/alert.wav"),
+    canAlert: true,
+    canSound: true,
+    pullforward: false,
+    alert: function() {
+        if(!tabHidden()) return false;
+        if(sounds.canAlert) {
+            sounds.canAlert = false;
+            if(sounds.canSound) {
+                sounds.sndAlert.play();
+                sounds.canSound = false;
+                setTimeout(function(){ canAlert = true; }, 10000);
+            }
+            var link = document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = 'images/32alert.ico';
+            document.getElementsByTagName('head')[0].appendChild(link);
+            setTimeout(function() {
+                sounds.canAlert = true;
+                var link = document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = 'images/32.ico';
+                document.getElementsByTagName('head')[0].appendChild(link);
+            }, 3000);
+        }
+    }
 }
 
 function doPost(data, func) {

@@ -66,7 +66,7 @@
                     $marker = $('#opponentMarker');
                     for(opNum in sData.opponents) {
 
-                        $('<div id="opusername_'+sData.opponents[opNum].username+'" class="username" data-livelements="opusername_'+sData.opponents[opNum].username+'"></div>')
+                        $('<div id="opusername_'+sData.opponents[opNum].username+'" class="username  pcolor'+opNum+'" data-livelements="opusername_'+sData.opponents[opNum].username+'"></div>')
                         .insertAfter($marker);
 
                         $('<div id="opavatar_'+sData.opponents[opNum].username+'" class="avatar">'+
@@ -94,7 +94,11 @@
 
                         $('#playersList').append('<button>'+sData.opponents[opNum].username+'</button>');
 
-                        $('#phase').append('<button>'+sData.opponents[opNum].username+'</button>');
+                        $('#phase').append('<button class="pcolor'+opNum+'">'+sData.opponents[opNum].username+'</button>');
+
+                        $('#battlefield').append('<div class="boardPreview pcolor'+opNum+'" data-previewowner="'+sData.opponents[opNum].username+'"><b class="playerName pcolor'+opNum+'">'+sData.opponents[opNum].username+' <i data-livelements="oplife_'+sData.opponents[opNum].username+'">?</i></b>');
+
+                        $('select[name="lGwinner"]').append('<option>'+sData.opponents[opNum].username+'</option>');
 
                         playersList.push(sData.opponents[opNum].username);
                     }
@@ -102,12 +106,23 @@
                     window.opDeckBack = 'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack;
 
                     $('#opavatar').css("background-image", "url('http://www.untap.in/img/avatars/"+sData.opponents[1].userRow.avatar+"')");
+                    if(opNum % 2) {
+                        $('.boardPreview.pcolor'+opNum).css('margin-left', 314);
+                    }
                 }else{
                     window.op = 'Solo Mode'
                     window.opDeckBack = 'http://www.untap.in/backs/untap.jpg';
                 }
+
+                //console.log(opNum, 'opNum');
+
+                
     			
+                $('select[name="lGwinner"]').append('<option>'+me+'</option>');
+
                 window.currentBoard = sData.game.fTurn == me ? playersList[0] : sData.game.fTurn;
+
+                $('#playsFirst').text(general.toTitleCase(sData.game.fTurn) + ' Plays First').show();
                 if(sData.game.multiplayer > 2) {
                     ui.showBoard(currentBoard);
                 }else{
@@ -136,7 +151,7 @@
                 //hide stuff from spectators.... not important just visual
                 if(spectate) {
                     var spStyles = $('<style> '+
-                        ".specHide { display: none; }" + 
+                        ".specHide { display: none !important; }" + 
                         ".counter { pointer-events: none; }" + 
                         ' </style>');
                     $('html > head').append(spStyles);
@@ -171,7 +186,7 @@
             window.location.assign(returnUrl);
         },
         tabAlert: function(sound) {
-
+            sounds.alert();
         }
     };
 
@@ -186,9 +201,7 @@
 
 <div id="playObjects" style="display: none;">
 
-    <div id="playsFirst">
-     Plays First!
-    </div>
+    <div id="playsFirst"></div>
     <script type="text/javascript">
         $(function(){
             setTimeout(function(){
@@ -196,20 +209,20 @@
             }, 5000);
         });
     </script>
-    <?php } ?>
     <div id="bFwrap">
         <div id="bfLine"></div>
         <div id="battlefield">
-            <div class="boardPreview"></div>
+            
             <input type="text" id="swing" maxlength="3" class="specHide">
             <div id="pileBox" data-umenu="spile"></div>
         </div>
-        <div id="bfButtons" class="specHide">
-            <div id="boardShowAll">[+]</div>
-            <div id="dice" data-livelements="dice" data-ttip="Dice; Left click roll d20, Right click roll d6">?</div>
-            <div data-ttip="Unpivot All" onclick="actions.unPivot($('#battlefield .card.pivoted:not(.op)')); return false;">U</div>
-            <div data-ttip="Add Token Card to Play Area" onclick="actions.token()">T</div>
-            <div data-ttip="Send Response Alert" id="resAlert" onclick="ui.resAlert()">!</div>
+        <div id="bfButtons">
+            <div id="boardShowAll" onclick="ui.previewBoard()" data-ttip="Full Board Preview (Hotkey: Tab)">[+]</div>
+            <div class="specHide" id="dice" data-livelements="dice" data-ttip="Dice; Left click roll d20, Right click roll d6">?</div>
+            <div class="specHide" data-ttip="Unpivot All" onclick="actions.unPivot($('#battlefield .card.pivoted:not(.op)')); return false;">U</div>
+            <div class="specHide" data-ttip="Add Token Card to Play Area" onclick="actions.token()">T</div>
+            <div class="specHide" data-ttip="Add Counter Card" onclick="actions.counterCard()">C</div>
+            <div class="specHide" data-ttip="Send Response Alert" id="resAlert" onclick="ui.resAlert()">!</div>
         </div>
         <div id="gameLog">
             <div id="gameStatus">
@@ -300,8 +313,6 @@
 
     <hr id="opponentMarker" style="display:none;">
 
-    
-
     <div id="outCardLeft"><textarea></textarea></div>
     <div id="outCardRight"><textarea></textarea></div>
 
@@ -313,7 +324,7 @@
 <div id="tildPop" class="popBox">
     <div>
         <div style="padding: 50px;">
-            Client Version: <span id="clientVersion">0.91.1 <?php if(isMobile()) { echo '(tablet)' ;}?></span><br>
+            Client Version: <span id="clientVersion">0.91.1</span><br>
             Server ID: <span id="server_instance"></span><br>
             Socket Status: <span id="SocketStatus">Connecting...</span><br>
             Socket Sync: <span id="SocketSync"></span><br>
@@ -376,11 +387,6 @@
 <div id="settings" class="popBox">
     <div>
         <h2>Game Settings</h2>
-        <span>Alert Sounds</span>
-        <select class="gSettings" name="soundAlerts">
-            <option value="true">On</option>
-            <option value="false">Off</option>
-        </select>
         <span>Mulligan Type (Play cards face down to keep)</span>
         <select class="gSettings" name="mulligan">
             <option value="sta">Return hand, Shuffle, Draw 1 Less</option>
@@ -413,10 +419,10 @@
         <h2>Leave Game</h2>
         <span>Who Won?</span>
         <select name="lGwinner">
-            <option value="">We're Both Winners!!</option>
-            <!-- <option data-livelements="op1username"></option> -->
-            <!-- <option data-livelements="username" selected></option> -->
+            <option value="norecord">No Result</option>
         </select>
+        <span>Game Notes</span>
+        <textarea placeholder="Game notes, visible to you only." name="lGcomments"></textarea>
         <span style="text-align: right;">
             <button id="leaveGameButton">Leave Game</button>
         </span>

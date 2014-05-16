@@ -767,6 +767,7 @@ var init = {
 	},
 	buttons: function() {
 		$('#leaveGameButton').click(function(){
+			$('#leaveGameButton').prop('disabled', true);
             doPost( { action: 'leaveGame', winner: $('[name="lGwinner"]').val() } );
         });
         $('#changeDeckButton').click(function() {
@@ -1931,8 +1932,8 @@ startSockets = function() {
 	window.ws = new WebSocket('ws://www.untap.in:443/');
     
     var socketError = setTimeout(function(){
-    	alert('Web Socket failed to connect, See FAQ Connection Issues');
-    }, 10000);
+    	alert('Web Socket failed to connect error997');
+    }, 15000);
 
     ws.onopen = function() {
     	clearTimeout(socketError);

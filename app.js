@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '9'
+window.uiVersion = '12'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -331,7 +331,20 @@ window.uiVersion = '9'
 
     var modModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
+        $scope.userBan = { action: 'userban' };
+        $scope.showAlert = false;
 
+        $scope.submitBan = function() {
+            $scope.showAlert = false;
+            $http.post(apiURL,  $scope.userBan, { responseType:'json', withCredentials: true }).
+            success(function(r, status) {
+                $scope.showAlert = { type: r.status, message: r.message };
+            });
+        }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
     }
 
     var accountModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
@@ -711,7 +724,7 @@ window.uiVersion = '9'
         canSound: true,
         pullforward: false,
         alert: function() {
-            if(tabHidden()) return false;
+            if(!tabHidden()) return false;
             if(sounds.canAlert) {
                 sounds.canAlert = false;
                 if(sounds.canSound) {

@@ -1,7 +1,7 @@
 <h2>Moderator Panel: <span class="upperCase">{{g.userData.username}}</span></h2>
 
 <div class="row">
-    <div class="large-4 columns">
+    <div class="large-3 columns">
     	<h4>Kill Game</h4>
     	<form>
     	<div class="row">
@@ -13,12 +13,39 @@
     	</div>
     	</form>
     </div>
-    <div class="large-4 columns">
+    <div class="large-5 columns">
     	<h4>Temp Ban</h4>
+    	<form ng-submit="submitBan()" autocomplete="off" >
+    	<label>Username
+        	<input type="text" placeholder="Username" ng-model="userBan.username" />
+    	</label>
+    	<label>Ban Time
+        <select ng-model="userBan.hours">
+          <option value="1">1 hour</option>
+          <option value="3">3 hours</option>
+          <option value="6">6 hours</option>
+        </select>
+      </label>
+	    <label>Ban Type</label>
+	    <input type="checkbox" id="chatban" ng-model="userBan.chatban"><label for="chatban">Lobby Chat</label>
+	    <input type="checkbox" id="newban" ng-model="userBan.newban"><label for="newban">New Games</label>
+	    <input type="checkbox" id="joinban"  ng-model="userBan.joinban"><label for="joinban">Join Games</label>
+      <label>Comment
+        <textarea placeholder="Reason for ban, suggest permenent ban?" ng-model="userBan.comment"></textarea>
+      </label>
+      <alert type="showAlert.type" ng-show="showAlert">{{showAlert.message}}</alert>
+      <button type="submit" class="expand">Ban User</button>
+      </form>
     </div>
     <div class="large-4 columns">
-    	<h4></h4>
+    	<h4>Mod Info</h4>
+    	<ul>
+    		<li>Always warn the offender before issuing a ban.</li>
+    		<li>Only ban players for agresive targeting or mass disruption to the community.</li>
+    		<li>Ban times are limited, but can be made more permenent if required.</li>
+    		<li>Killing games is for debuging issues and exteme profanity in the game name.</li>
+    		<li>All actions in the Mod panel are logged.</li>
+    	</ul>
     </div>
 </div>
-
 <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
