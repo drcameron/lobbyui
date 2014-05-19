@@ -74,6 +74,8 @@
                             '<div class="counter genCount" data-livelements="opgenCount_'+sData.opponents[opNum].username+'">?</div>'+
                             '</div>').insertAfter($marker);
 
+                        $('#opavatar_'+sData.opponents[opNum].username).css('background-image', "url('http://www.untap.in/img/avatars/"+sData.opponents[opNum].userRow.avatar+"')");
+
                         $('<div id="ophand_'+sData.opponents[opNum].username+'" class="hand"></div>').insertAfter($marker);
                         $('<div id="opdiscard_'+sData.opponents[opNum].username+'" class="spanPile"></div>').insertAfter($marker);
                         $('<div id="opexpelled_'+sData.opponents[opNum].username+'" class="spanPile"></div>').insertAfter($marker);

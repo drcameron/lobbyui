@@ -1134,8 +1134,27 @@ var ui = {
 	    });
 	},
 	arrows: function(src,target) {
-		var srcTarget = $('#battlefield .boardPreview div[data-cardid="'+target+'"]');
-        var srcCache = $('#battlefield div[data-cardid="'+src+'"]');
+
+		if(($('.boardPreview').is(':visible'))&&($('div[data-cardid="'+target+'"]').hasClass('op'))) {
+			var srcTarget = $('#battlefield .boardPreview div[data-cardid="'+target+'"]');
+			var srcTargetAdd = srcTarget.parent().position();
+			srcTargetAdd.top = srcTargetAdd.top - 20;
+			srcTargetAdd.left = srcTargetAdd.left - 20;
+		}else{
+			var srcTarget = $('#battlefield>div[data-cardid="'+target+'"]');
+			var srcTargetAdd = {top:0,left:0};
+		}
+		
+		if(($('.boardPreview').is(':visible'))&&($('div[data-cardid="'+src+'"]').hasClass('op'))) {
+			var srcCache = $('#battlefield .boardPreview div[data-cardid="'+src+'"]');
+			var srcCacheAdd = srcCache.parent().position();
+			srcCacheAdd.top = srcCacheAdd.top - 20;
+			srcCacheAdd.left = srcCacheAdd.left - 20;
+		}else{
+			var srcCache = $('#battlefield>div[data-cardid="'+src+'"]');
+			var srcCacheAdd = {top:0,left:0};
+		}
+
         if(target != 'me' && target != 'player0000') {
             if(srcTarget.length == 0 || srcCache.length == 0) {
                 setTimeout(function(){
@@ -1153,13 +1172,13 @@ var ui = {
         }else{
             var sTp = srcTarget.position();
 
-            tarX = (sTp.top)/bfZoom+51;
-            tarY = (sTp.left)/bfZoom+37;
+            tarX = ((sTp.top)/bfZoom+51)+srcTargetAdd.top;
+            tarY = ((sTp.left)/bfZoom+37)+srcTargetAdd.left;
         }
         
         var sCp = srcCache.position();
-        srcX = (sCp.top)/bfZoom+51;
-        srcY = (sCp.left)/bfZoom+37;
+        srcX = ((sCp.top)/bfZoom+51)+srcCacheAdd.top;
+        srcY = ((sCp.left)/bfZoom+37)+srcCacheAdd.left;
 
         var length = Math.sqrt((tarX - srcX) * (tarX - srcX) + (tarY - srcY) * (tarY - srcY));
         if(length < 10) { return false; }
@@ -1172,7 +1191,7 @@ var ui = {
         var linkLine = $('<div id="new-link-line"><div id="triangle-down"></div></div>').appendTo('#battlefield');
 
         linkLine.css('top', srcX).css('left', srcY).animate( { height: length })
-        .css('-webkit-transform', 'rotate(' + angle + 'deg)').css('transform', 'rotate(' + angle + 'deg)').css('z-index', '5');
+        .css('-webkit-transform', 'rotate(' + angle + 'deg)').css('transform', 'rotate(' + angle + 'deg)').css('z-index', '21');
 
         setTimeout(function(){
             linkLine.fadeOut(500, function (){
@@ -1192,6 +1211,7 @@ var ui = {
         doPost( { action: 'changePhase', phase: to } );
     },
     previewBoard: function() {
+    	$('#new-link-line').remove();
     	if(sData.game.multiplayer < 3) return false;
 
     	if($('.boardPreview').is(':visible')) {
@@ -1205,6 +1225,7 @@ var ui = {
     	}
     },
     showBoard: function(username, quick) {
+    	$('#new-link-line').remove();
     	if(sData.game.multiplayer < 3) return false;
 
     	quick = typeof quick !== 'undefined' ? quick : false;
@@ -2166,13 +2187,12 @@ startSockets = function() {
                 break;
 
                 case 'flipuptd':
+                	//console.log(value);
                     if(value.username == me) {
-                        $('#'+value.deck).css("background-image", "url("+value.cardimg+")").data('tempcid', value.cardid);
+                        $('#'+value.deck).css("background-image", "url("+value.cardimg+")").attr('data-tempcid', value.cardid);
                     }else{
-                    	$('#op'+value.deck+'_'+value.username).css("background-image", "url("+value.cardimg+")").data('tempcid', value.cardid);
+                    	$('#op'+value.deck+'_'+value.username).css("background-image", "url("+value.cardimg+")").attr('data-tempcid', value.cardid);
                     }
-                    
-
                 break;
 
                 case 'flash':
@@ -2185,7 +2205,7 @@ startSockets = function() {
 
                 case 'phase':
 
-                	console.log(value);
+                	//console.log(value);
                     $('#swing').hide();
                     $('#phase div').removeClass('active');
                     
@@ -2342,6 +2362,7 @@ startSockets = function() {
 
                 case 'card':
                     cardSync(value);
+                    console.log(value);
                 break;
 
                 case 'opfindcard':

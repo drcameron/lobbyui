@@ -1218,7 +1218,7 @@
     }
 
     #new-link-line {
-        z-index: 11;
+        z-index: 40;
         position: absolute;
         width: 4px;
         background-color: #06a;
