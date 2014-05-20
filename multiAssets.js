@@ -1,4 +1,3 @@
-
 gameInit = function() {
 	
 	//dom cache
@@ -1839,10 +1838,17 @@ function cardSync(data) {
 	            	cardCache.not('#battlefield>.card').animate({bottom: (data.posTop/2)-206, left: data.posLeft/2 });
 	            }
 	        }else{
+                var p = cardCache.position();
+                if( typeof currentLocation === "undefined" )
+                {
 	            cardCache.animate({top: data.posTop, left: data.posLeft });
+                } else {
+                    //doPost( { action: 'moveCard', cardid: cardCache.data('cardid'), top: p.top, left: p.left } );
+                    cardCache.show();
+                }
 	        }
 	    }
-	    if(data.cardState != null) {
+        if(data.cardState != null && ( typeof currentLocation === "undefined" || data.owner != me )) {
 	        var splitState = data.cardState.split(',');
 	        if($.inArray('pivoted',splitState) >= 0) {
 	            cardCache.addClass('pivoted');

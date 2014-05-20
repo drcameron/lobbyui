@@ -30,14 +30,16 @@
     $(function() {
         loadHelp('Initilising Game...');
 
-    	$.post( "http://www.untap.in/apiv2.php",
-    		{ action: 'entergame', server: location.hash.replace('#', '') },
+       $.ajax( "http://www.untap.in/apiv2.php",
+              { type: "POST",
+               data: {action: 'entergame', server: location.hash.replace('#', '') },
+               xhrFields: { withCredentials: true }} ).done (
     		function(data) {
 
                 loadHelp('Preparing Game Data...');
 
 				console.log(data);
-				window.sData = data;
+           window.sData = JSON.parse(data);
 
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
@@ -172,7 +174,7 @@
     			gameInit();
 				startSockets();
 
-			}, 'json').fail(function() {
+         }).fail(function() {
 				alert('Failed to initialise game data');
 				window.location.href = returnUrl;
             	window.location.assign(returnUrl);
