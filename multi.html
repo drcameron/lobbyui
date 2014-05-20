@@ -2,6 +2,20 @@
 <html>
 <head>
     <title>UnTap.in :: Beta</title>
+    <script type='text/javascript'>
+        window.Muscula = { settings:{
+            logId:"a44634ed-7e8e-4dde-9607-c8a099f91de5", suppressErrors: false
+        }};
+        (function () {
+            var m = document.createElement('script'); m.type = 'text/javascript'; m.async = true;
+            m.src = (window.location.protocol == 'https:' ? 'https:' : 'http:') +
+                '//musculahq.appspot.com/Muscula6.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(m, s);
+            window.Muscula.run=function(){var a;eval(arguments[0]);window.Muscula.run=function(){};};
+            window.Muscula.errors=[];window.onerror=function(){window.Muscula.errors.push(arguments);
+            return window.Muscula.settings.suppressErrors===undefined;}
+        })();
+    </script>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
