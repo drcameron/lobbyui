@@ -39,7 +39,7 @@
                 loadHelp('Preparing Game Data...');
 
 				console.log(data);
-           window.sData = JSON.parse(data);
+				window.sData = JSON.parse(data);
 
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
@@ -161,8 +161,8 @@
                     $('html > head').append(spStyles);
                 }
     			
-    			for(d in data.myDecks) {
-                    $('<option value="'+data.myDecks[d].pdb_rowid+'" selected>'+data.myDecks[d].name+'</option>').appendTo('select[name="chDeck"]');
+    			for(d in sData.myDecks) {
+                    $('<option value="'+sData.myDecks[d].pdb_rowid+'" selected>'+sData.myDecks[d].name+'</option>').appendTo('select[name="chDeck"]');
                 }
 
     			if(sData.isempty) {
