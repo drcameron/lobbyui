@@ -522,8 +522,6 @@ window.uiVersion = '12'
 			})
 		}
 
-		$scope.getUpdates();
-
 		$scope.getDecks = function() {
 			$http.post(apiURL,  { action: 'deckData' }, { responseType:'json', withCredentials: true })
 			.success(function(r, status) {
@@ -560,7 +558,7 @@ window.uiVersion = '12'
 
 	        	if(JSON.stringify(obj.userData) != JSON.stringify(r.userData)) { obj.userData = r.userData; }
 	        	//if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) { obj.gameList = r.gameList; }
-
+                
 	        	obj.specList = syncArrObj(obj.specList, obj2arr(r.specList), 'gameId', 'sync');
 	        	obj.gameList = syncArrObj(obj.gameList, obj2arr(r.gameList), 'gameId', 'sync');
 	        	
@@ -585,7 +583,6 @@ window.uiVersion = '12'
 			        	sounds.alert();
 			        }
 		        }
-		        
 
 	        	window.serverTime = parseInt(r.serverTime);
 
@@ -609,11 +606,13 @@ window.uiVersion = '12'
     	var loop = function (loopCount) {
         	if(loopCount == 0) {
         		var loopTime = 1;
-        		$scope.getDecks();
-        		
-        	}else{
+        	}else if(loopCount == 1){
+                $scope.getDecks();
+                $scope.getUpdates();
         		var loopTime = 3000;
-        	}
+        	}else{
+                var loopTime = 3000;
+            }
 
         	$timeout(function(){
 	        	$scope.promise = $scope.fetch($scope.g, loopCount);

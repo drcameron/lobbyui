@@ -331,7 +331,7 @@ gameInit = function() {
 
 								console.log(menuType);
 								if(typeof menuMap[menuType].list != 'undefined') {
-								console.log(menuMap[menuType].list);
+								//console.log(menuMap[menuType].list);
 									if(typeof menuMap[menuType].deFault != 'undefined') {
 										catchDbl = {
 											element: $elem,
@@ -1839,9 +1839,8 @@ function cardSync(data) {
 	            }
 	        }else{
                 var p = cardCache.position();
-                if( typeof currentLocation === "undefined" )
-                {
-	            cardCache.animate({top: data.posTop, left: data.posLeft });
+                if( typeof currentLocation === "undefined" ) {
+	            	cardCache.animate({top: data.posTop, left: data.posLeft });
                 } else {
                     //doPost( { action: 'moveCard', cardid: cardCache.data('cardid'), top: p.top, left: p.left } );
                     cardCache.show();
