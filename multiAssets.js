@@ -330,27 +330,29 @@ gameInit = function() {
 								}
 
 								console.log(menuType);
-								if(typeof menuMap[menuType].list != 'undefined') {
-								//console.log(menuMap[menuType].list);
-									if(typeof menuMap[menuType].deFault != 'undefined') {
-										catchDbl = {
-											element: $elem,
-											action: menuMap[menuType].deFault
+								if(typeof menuMap[menuType] != 'undefined') {
+									if(typeof menuMap[menuType].list != 'undefined') {
+									//console.log(menuMap[menuType].list);
+										if(typeof menuMap[menuType].deFault != 'undefined') {
+											catchDbl = {
+												element: $elem,
+												action: menuMap[menuType].deFault
+											};
+											setTimeout(function(){
+												catchDbl = false;
+											},350);
+										}
+										
+										var allMenu = menuMap[menuType].list;
+										var menuSetup = menuMap[menuType].setup;
+										//var pos = {top:ev.originalEvent.targetTouches[0].pageY,left:ev.originalEvent.targetTouches[0].pageX};
+										var pos = {
+											top: (ev.originalEvent.pageY>0 ? ev.originalEvent.pageY: ev.originalEvent.targetTouches[0].pageY),
+											left: (ev.originalEvent.pageX>0 ? ev.originalEvent.pageX: ev.originalEvent.targetTouches[0].pageX)
 										};
-										setTimeout(function(){
-											catchDbl = false;
-										},350);
+										//.targetTouches[0]
+							            unTapMenu.make(pos, allMenu, $elem, menuSetup);
 									}
-									
-									var allMenu = menuMap[menuType].list;
-									var menuSetup = menuMap[menuType].setup;
-									//var pos = {top:ev.originalEvent.targetTouches[0].pageY,left:ev.originalEvent.targetTouches[0].pageX};
-									var pos = {
-										top: (ev.originalEvent.pageY>0 ? ev.originalEvent.pageY: ev.originalEvent.targetTouches[0].pageY),
-										left: (ev.originalEvent.pageX>0 ? ev.originalEvent.pageX: ev.originalEvent.targetTouches[0].pageX)
-									};
-									//.targetTouches[0]
-						            unTapMenu.make(pos, allMenu, $elem, menuSetup);
 								}
 							}
 							return false;
