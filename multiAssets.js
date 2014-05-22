@@ -1841,11 +1841,14 @@ function cardSync(data) {
 	            }
 	        }else{
                 var p = cardCache.position();
-                if(( typeof currentLocation === "undefined" )||(currentLocation != 'battlefield')){
-	            	cardCache.animate({top: data.posTop, left: data.posLeft });
-                } else {
-                    //doPost( { action: 'moveCard', cardid: cardCache.data('cardid'), top: p.top, left: p.left } );
-                    cardCache.show();
+                if(spectate) {
+                	cardCache.animate({top: data.posTop, left: data.posLeft });
+                }else{
+                	if(( typeof currentLocation === "undefined" )||(currentLocation != 'battlefield')){
+		            	cardCache.animate({top: data.posTop, left: data.posLeft });
+	                } else {
+	                    cardCache.show();
+	                }
                 }
 	        }
 	    }
