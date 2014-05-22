@@ -1848,7 +1848,8 @@ function cardSync(data) {
                 }
 	        }
 	    }
-        if(data.cardState != null && ( typeof currentLocation === "undefined" || data.owner != me || spectate)) {
+
+		if (data.cardState != null && (typeof currentLocation === "undefined" || data.owner != me || spectate)) {
 	        var splitState = data.cardState.split(',');
 	        if($.inArray('pivoted',splitState) >= 0) {
 	            cardCache.addClass('pivoted');
