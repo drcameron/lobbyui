@@ -1841,18 +1841,14 @@ function cardSync(data) {
 	            }
 	        }else{
                 var p = cardCache.position();
-                if(spectate) {
-                	cardCache.animate({top: data.posTop, left: data.posLeft });
-                }else{
-                	if(( typeof currentLocation === "undefined" )||(currentLocation != 'battlefield')){
-		            	cardCache.animate({top: data.posTop, left: data.posLeft });
-	                } else {
-	                    cardCache.show();
-	                }
+            	if(( typeof currentLocation === "undefined" ) || (currentLocation != 'battlefield') || spectate){
+	            	cardCache.animate({top: data.posTop, left: data.posLeft });
+                } else {
+                    cardCache.show();
                 }
 	        }
 	    }
-        if(data.cardState != null && ( typeof currentLocation === "undefined" || data.owner != me )) {
+        if(data.cardState != null && ( typeof currentLocation === "undefined" || data.owner != me || spectate)) {
 	        var splitState = data.cardState.split(',');
 	        if($.inArray('pivoted',splitState) >= 0) {
 	            cardCache.addClass('pivoted');
