@@ -27,7 +27,6 @@ window.uiVersion = '12'
 		      tip: "@"
 		    },
     		template: '<span class="label secondary right" popover="{{tip}}" popover-trigger="mouseenter" popover-placement="left" >Help</span>'
-    		
     	}
     });
 
