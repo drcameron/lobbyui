@@ -558,7 +558,7 @@ window.uiVersion = '12'
 
 	        	if(JSON.stringify(obj.userData) != JSON.stringify(r.userData)) { obj.userData = r.userData; }
 	        	//if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) { obj.gameList = r.gameList; }
-                
+
 	        	obj.specList = syncArrObj(obj.specList, obj2arr(r.specList), 'gameId', 'sync');
 	        	obj.gameList = syncArrObj(obj.gameList, obj2arr(r.gameList), 'gameId', 'sync');
 	        	
@@ -613,7 +613,6 @@ window.uiVersion = '12'
         	}else{
                 var loopTime = 3000;
             }
-
         	$timeout(function(){
 	        	$scope.promise = $scope.fetch($scope.g, loopCount);
 		        loopCount++;
