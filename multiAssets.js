@@ -163,6 +163,17 @@ gameInit = function() {
 				}
 			}
 
+			if($(ev.target).attr('data-location') == 'hand') {
+
+				// future feature, drag cards from hand to designated areas.
+
+				// $(ev.target).on('mousemove touchmove', function(e) {
+				// 	console.log(e);
+				// }).one('touchend mouseup', function(){
+				// 	$(this).off('mousemove touchmove');
+				// });
+			}
+
 			if($(ev.target).is('#battlefield .card:not(.op)')) {
 
 				if(shiftPress == true) {
@@ -330,6 +341,7 @@ gameInit = function() {
 								}
 
 								console.log(menuType);
+
 								if(typeof menuMap[menuType] != 'undefined') {
 									if(typeof menuMap[menuType].list != 'undefined') {
 									//console.log(menuMap[menuType].list);
@@ -1682,6 +1694,9 @@ unTapMenu = {
 	            if(menuFunc[breakDuals[sp]].multi) {
 	            	$item.addClass('numSetMulti');
 	            }
+	            if(numPress > 1) {
+	       			$('.numSetMulti').text(numPress);
+	       		}
 	            $item.appendTo('body');
         	}
         }
@@ -1908,7 +1923,6 @@ function cardSync(data) {
 	}
 
 	if((typeof data.cardCounter != 'undefined')&&(data.slug != 'counter-card')) {
-
 	    cardCache.append('<div class="counter">'+data.cardCounter+'<div>');
 	}
 
