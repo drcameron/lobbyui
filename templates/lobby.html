@@ -20,18 +20,18 @@
 		      <ul class="off-canvas-list">
 		        <li><label>Friends</label></li>
 		        <li ng-repeat="user in g.friends | orderBy:'username'">
-		        	<a class="upperCase" ng-class="{greenText: user.online=='true'}">
+		        	<a class="upperCase" dropdown-toggle="#friendDropDown" ng-class="{greenText: user.online=='true'}" ng-click="clickUser(user.username)" >
 		        		{{user.username}}
 		        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i>
 		        	</a>
 		        </li>
 		        <li>
-		         <div class="row collapse" style="display:none;">
+		         <div class="row collapse">
 			        <div class="small-10 columns">
-			          <input type="text" placeholder="Add Username">
+			          <input type="text" placeholder="Add Friend" ng-model="gen.addfriendusername">
 			        </div>
 			        <div class="small-2 columns">
-			          <a href="#" class="button postfix">Go</a>
+			          <a href="#" class="button postfix" ng-click="addFriend()">Go</a>
 			        </div>
 			      </div>
 		        </li>
@@ -40,6 +40,11 @@
 		        	<a class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
 		        </li>
 		      </ul>
+
+		      <ul id="friendDropDown" class="f-dropdown">
+				<li><a ng-click="pmUser()"><i class="fi-comment-quotes" style="margin-right:5px;"></i> Private Message</a></li>
+				<li><a ng-click="arFriend()"><i class="fi-torsos-male-female" style="margin-right:5px;"></i> Remove Friend</a></li>
+			</ul>
 		    </aside>
 
 		    <aside class="right-off-canvas-menu">

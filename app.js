@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '12'
+window.uiVersion = '13'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -94,6 +94,8 @@ window.uiVersion = '12'
     	$scope.g = lobbyFeed;
     	$scope.decks = deckData;
     	$scope.template = 'templates/lobby.html?'+uiVersion;
+
+        $scope.gen = { addfriendusername: '' };
 
     	$scope.sendChat = function(ev) {
     		if(ev.which == 13) {
@@ -201,6 +203,19 @@ window.uiVersion = '12'
 				}
         	});
 		}
+
+        $scope.addFriend = function() {
+
+            $http.post(apiURL,  {action: 'arFriend', username: $scope.gen.addfriendusername }, { responseType:'json', withCredentials: true }).
+            success(function(r, status) {
+                for(u in $scope.g.online) {
+                    if($scope.g.online[u].username == $scope.selectedUser) {
+                        $scope.g.online[u].friends = ($scope.g.online[u].friends == 'true' ? 'false' : 'true');
+                    }
+                }
+            });
+            $scope.gen.addfriendusername = '';
+        }
 
 		$scope.arBlock = function() {
 
