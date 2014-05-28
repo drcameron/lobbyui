@@ -211,6 +211,7 @@ gameInit = function() {
 					dropnoclick = true;
 	            });
 
+
 				$(document).one('touchend mouseup', function() {
 					$(document).off('mousemove.cardmove touchmove.cardmove');
 					if(dropnoclick == false) return false;
@@ -537,7 +538,6 @@ var actions = {
 	},
 	cardClone: function(card) {
 		if(card.hasClass('tokenCard')) return false;
-		if(card.parent().attr('id') != 'battlefield') return false;
 		doPost( { action: 'cloneCard', cardid: card.data('cardid') });
 	},
 	tokenClone: function(card) {
