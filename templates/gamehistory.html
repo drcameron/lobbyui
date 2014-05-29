@@ -1,0 +1,37 @@
+<h2>Game History</h2>
+
+<div class="row">
+    <div class="small-12 columns">
+      <table style="width:100%;">
+        <thead>
+          <tr>
+            <th>Game Name</th>
+            <th>Duration</th>
+            <th>When</th>
+            <th>Winner</th>
+            <th>Players</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="game in gameHistory.list">
+            <td><a class="has-tip ng-scope" tooltip-placement="right" tooltip-html-unsafe="{{game.notes}}">{{game.gtype}}</a></td>
+            <td>{{game.duration}}</td>
+            <td>{{game.when}}</td>
+            <td>{{game.winner}}</td>
+            <td class="ghPlayerList">
+              <a ng-repeat="player in game.players" class="has-tip ng-scope" tooltip-placement="left" tooltip-html-unsafe="{{player.deck}}">{{player.username}}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+<a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+<style type="text/css">
+.ghPlayerList {
+  text-align: center;
+}
+.ghPlayerList a {
+ margin: 0 15px;
+}
+</a>

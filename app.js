@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '13'
+window.uiVersion = '14'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -321,8 +321,6 @@ window.uiVersion = '13'
             	$scope.password = '';
         	});
     	}
-
-    	window.test = $scope;
     	
     });
 
@@ -341,6 +339,20 @@ window.uiVersion = '13'
 		        scrollTop: $('h3:contains("'+find+'")').offset().top
 		    }, 700);
 		}
+    }
+
+
+    var ghModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
+        $scope.g = lobbyFeed;
+        $scope.gameHistory = {};
+        $http.post(apiURL,  { action: 'gameHistory' }, { responseType:'json', withCredentials: true }).
+        success(function(r, status) {
+            $scope.gameHistory.list = r;
+        });
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
     }
 
     var modModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
@@ -493,6 +505,13 @@ window.uiVersion = '13'
 				controller: modModalCtrl
 			});
 		}
+
+        $scope.ghModal = function() {
+            var modalInstance = $modal.open({
+                templateUrl: 'templates/gamehistory.html?'+uiVersion,
+                controller: ghModalCtrl
+            });
+        }
 
 		$scope.genModal = function(which) {
 			var modalInstance = $modal.open({
