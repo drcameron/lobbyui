@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '14'
+window.uiVersion = '17'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -33,7 +33,7 @@ window.uiVersion = '14'
     untap.directive('upload', function() {
     	return {
     		restrict: 'E',
-    		template: '<div><a class="button expand secondary small" ng-click="click()">'+
+    		template: '<div><a class="button expand secondary small" ng-click="clickupload()">'+
     					'<i class="fi-upload"></i> {{upload}}'+
     					'</a>'+
     					'<div data-alert class="alert-box warning radius" ng-show="warning != \'\'">'+
@@ -45,7 +45,7 @@ window.uiVersion = '14'
 				scope.warning = '';
 				var model = attrs.ctrlModel || uploadFile;
 				scope.$parent[model] = { filename: '', data: '' };
-    			scope.click = function() {
+    			scope.clickupload = function() {
     				inputF = elem.find('input[type="file"]');
     				textA = elem.find('textarea');
     				inputF.trigger('click').bind('change', function(e) {
@@ -88,6 +88,68 @@ window.uiVersion = '14'
     			}
     		}
     	}	
+    });
+    
+    //why i had to repeat this i have no idea, i lost patience trying to split out the scopes... bleh
+    untap.directive('uploadfile', function() {
+        return {
+            restrict: 'E',
+            template: '<div><a class="button expand secondary small" ng-click="clickuploadfile()">'+
+                        '<i class="fi-upload"></i> {{uploadfile}}'+
+                        '</a>'+
+                        '<div data-alert class="alert-box warning radius" ng-show="warningfile != \'\'">'+
+                        '  {{warningfile}}'+
+                        '</div>'+
+                        '<input style="display: none;" type="file"></div>',
+            link: function(scope, elem, attrs) {
+                scope.uploadfile = 'Upload';
+                scope.warningfile = '';
+                var model = attrs.ctrlModel || uploadFile;
+                scope.$parent[model] = { filename: '', data: '' };
+                scope.clickuploadfile = function() {
+
+                    var inputF = elem.find('input[type="file"]');
+                    var textA = elem.find('textarea');
+                    inputF.trigger('click').bind('change', function(e) {
+                        var input = this;
+                        
+                        if (input.files && input.files[0]) {
+                            scope.warningfile = '';
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var b64 = e.target.result.split(',')[1];
+                                var byteSize = encodeURI(b64).split(/%..|./).length - 1;
+                                var filename = $(input).val().replace(/^.*[\\\/]/, '');
+                                var ext = filename.split('.').pop();
+
+                                if(typeof attrs.fileExtentions != 'undefined') {
+                                    if(jQuery.inArray( ext, attrs.fileExtentions.split(' ')) < 0) {
+                                        console.log(attrs.fileExtentions.split(' '), ext, jQuery.inArray( ext, attrs.fileExtentions.split(' ')));
+                                        scope.warningfile = 'File type invalid.';
+                                    }
+                                }
+
+                                if(typeof attrs.maxSize != 'undefined') {
+                                    if(byteSize > parseInt(attrs.maxSize)) {
+                                        scope.warningfile = 'File too large.';
+                                    }
+                                }
+                                console.log(filename, ext, byteSize);
+                                if(scope.warningfile == '') {
+                                    //textA.val(b64);
+                                    scope.$parent[model] = { filename: filename, data: b64 };
+                                    scope.uploadfile = 'Upload : ' + filename;
+                                }else{
+                                    scope.$parent[model] = { filename: '', data: '' };
+                                    scope.uploadfile = 'Upload';
+                                }
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    });
+                }
+            }
+        }   
     });
 
     untap.controller('lobbyCtrl', function($scope, $http, $rootScope, $timeout, lobbyFeed, deckData) {
@@ -397,7 +459,8 @@ window.uiVersion = '14'
 				email: $scope.userData.email,
 				deckBack: $scope.userData.deckBack,
 				password: $scope.userData.password,
-				avatar: $scope.avatarUpload.data
+				avatar: $scope.avatarUpload.data,
+                deckbackUpload: $scope.deckbackUpload.data,
 			}
 			$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
 			success(function(r, status) {

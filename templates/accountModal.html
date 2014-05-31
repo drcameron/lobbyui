@@ -17,6 +17,10 @@
         <helptip tip="Upload in game Avatar, JPG only supported. Max filesize 150kb"></helptip>
         <upload max-size="150000" file-extentions="jpg" ctrl-model="avatarUpload"></upload>
       </label>
+      <label ng-show="userData.donate == 'true'">Custom Deck Back
+        <helptip tip="Deck Back, JPG only supported. Max filesize 200kb, 223x310 pixels. See FAQ for more infomation"></helptip>
+        <uploadfile max-size="200000" file-extentions="jpg" ctrl-model="deckbackUpload"></uploadfile>
+      </label>
       <label>Deck Back
         <helptip tip="Unlock more deck backs from the funding page."></helptip>
         <select ng-model="userData.deckBack" ng-options="deck for deck in userData.unlockedDecks"></select>
