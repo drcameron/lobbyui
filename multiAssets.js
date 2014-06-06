@@ -38,7 +38,7 @@ gameInit = function() {
     window.keepOldVal = false;
     window.catchDbl = false;
     window.dropnoclick = false;
-    window.delayPost = [];
+    window.delayPost = {};
     window.counterDrag = 0;
 
     window.allcards = {};
@@ -1221,7 +1221,12 @@ var ui = {
         var to = $(this).data('phase');
         $('#phase div').removeClass('active');
         $(this).addClass('active');
-        doPost( { action: 'changePhase', phase: to } );
+
+        clearTimeout(delayPost.endphase);
+        delayPost['endphase'] = setTimeout(function(){
+        	doPost( { action: 'changePhase', phase: to } );
+        }, 200);
+        
     },
     previewBoard: function() {
     	$('#new-link-line').remove();
