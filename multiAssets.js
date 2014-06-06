@@ -726,9 +726,8 @@ var init = {
             if(e.which == 13) {
                 var chatId = ui.makeid();
                 if($(this).hasClass('public')) {
-                	if(spectate == true) return false;
                     var sendMess = $(this).val();
-                    $('#gameLog #publicChat.scroll').append('<div  data-chatid="'+chatId+'" class="gChat"><b>'+me+' :</b> '+$(this).val()+'</div>').scrollTop($('#gameLog #publicChat.scroll')[0].scrollHeight);
+                    $('#gameLog #publicChat.scroll').append('<div  data-chatid="'+chatId+'" class="gChat"><b>Pending :</b> '+$(this).val()+'</div>').scrollTop($('#gameLog #publicChat.scroll')[0].scrollHeight);
                     doPost( { action: 'pubChat', message: sendMess, chatId: chatId });
                 }else
                 if($(this).hasClass('spectate')) {
@@ -914,7 +913,7 @@ var ui = {
 	setNum: function(num) {
 		clearTimeout(setActPressTimer);
 		clearTimeout(setNumPressTimer);
-		console.log(window);
+		//console.log(window);
 		numPress = Math.max(num, 1);
 
 		var nDraw = $("#deckContext a:contains('Draw'), #deck2Context a:contains('Draw')");
@@ -967,7 +966,7 @@ var ui = {
 		var cardid = card.data('cardid');
 		if(card.hasClass('cardPreview')) {
 			card = $('div[data-cardid="'+cardid+'"]').not('.cardPreview');
-			console.log(card);
+			//console.log(card);
 		}
 
 		if(card.data('location') == 'battlefield') {
@@ -1235,7 +1234,7 @@ var ui = {
     	if($('.boardPreview').is(':visible')) {
     		$('.boardPreview').hide();
     		$('#battlefield>.tmphide').removeClass('tmphide');
-    		console.log(currentBoard);
+    		//console.log(currentBoard);
   			ui.showBoard(currentBoard, true);
     	} else {
     		$('.boardPreview').show();
@@ -1801,7 +1800,7 @@ function cardSync(data) {
 	    if(data.location == 'deck') return false;
 	    if(data.location == 'deck2') return false;
 	    if(data.location == 'battlefield') {
-	    	console.log(cardid, 'create card');
+	    	//console.log(cardid, 'create card');
 	        $('#battlefield').append('<div class="card" data-cardid="'+cardid+'"></div>');
 	        $('#battlefield .boardPreview[data-previewowner="'+data.owner+'"]').append('<div class="card cardPreview" data-cardid="'+cardid+'"></div>');
 	    }else{
@@ -1893,7 +1892,7 @@ function cardSync(data) {
 	}
 
 	if(data.slug == 'counter-card') {
-		console.log(data);
+		//console.log(data);
 		cardCache.addClass('counterCard');
 
 		for(cn in data.cNames) {
@@ -2015,7 +2014,6 @@ var bindHotKeys = function(e) {
 
     if(e.which == 16) { shiftPress = true; } //shift down
 
-    
     if(e.keyCode == 38) { //up key Life Up
         //console.log(e);
         if(shiftPress == true) {
@@ -2043,11 +2041,11 @@ var bindHotKeys = function(e) {
     
 
     if(currentHover != false) {
-        if(e.which == 68) { actions.common(currentHover, 'discard'); return false; } // D discard
-        if(e.which == 80) { actions.common(currentHover, 'facedownpile'); return false; } // P facedownpile
-        if(e.which == 84) { actions.common(currentHover, 'ReturnToDeck'); return false; } // T top of deck
-        if(e.which == 89) { actions.common(currentHover, 'ReturnToBottom'); return false; } // Y bottom of deck
-        if(e.which == 82) {
+        if(e.which == sData.hotkeys.discard) { actions.common(currentHover, 'discard'); return false; } // D discard
+        if(e.which == sData.hotkeys.downpile) { actions.common(currentHover, 'facedownpile'); return false; } // P facedownpile
+        if(e.which == sData.hotkeys.toDeck) { actions.common(currentHover, 'ReturnToDeck'); return false; } // T top of deck
+        if(e.which == sData.hotkeys.toBottom) { actions.common(currentHover, 'ReturnToBottom'); return false; } // Y bottom of deck
+        if(e.which == sData.hotkeys.toHand) {
             if(currentHover.data('location') != 'hand') {
                 actions.common(currentHover, 'ReturnToHand'); return false;
             }else{
@@ -2057,16 +2055,16 @@ var bindHotKeys = function(e) {
 				klone.appendTo(cardParent);
             }
         } // R return to hand
-        if(e.which == 83) { actions.common(currentHover, 'expel'); return false; } // S Expel
-        if(e.which == 74) { actions.tokenClone(currentHover); return false; } // J clone token
-        if(e.which == 76) { actions.cardClone(currentHover); return false; } // L clone card
-        if(e.which == 75) { //K flipUp
+        if(e.which == sData.hotkeys.expel) { actions.common(currentHover, 'expel'); return false; } // S Expel
+        if(e.which == sData.hotkeys.cloneToke) { actions.tokenClone(currentHover); return false; } // J clone token
+        if(e.which == sData.hotkeys.cloneCard) { actions.cardClone(currentHover); return false; } // L clone card
+        if(e.which == sData.hotkeys.flipCard) { //K flipUp
             if(currentHover.data('location') == 'battlefield') {
                 actions.common(currentHover, 'flipUp');
             }
             return false;
         }
-        if(e.which == 90) { //Z pivit group
+        if(e.which == sData.hotkeys.pivGroup) { //Z pivit group
             if(currentHover.data('location') == 'battlefield') {
                 var group = $(ui.cardGroup(currentHover));
                 if(group.length > 0) {
@@ -2076,7 +2074,7 @@ var bindHotKeys = function(e) {
             }
         } // Z tap group
 
-        if(e.which == 32) { // space
+        if(e.which == sData.hotkeys.default) { // space
             if(currentHover.data('location') == 'battlefield') {
                 if(currentHover != false) { actions.pivot(currentHover); }
             } else {
@@ -2088,26 +2086,26 @@ var bindHotKeys = function(e) {
     }
 
     if(deckHover != false) {
-        if(e.which == 32) { actions.draw(deckHover); } //space
-        if(e.which == 68) { actions.drawTo(deckHover, 'Discard'); return false; } //D Discard
-        if(e.which == 83) { actions.drawTo(deckHover, 'Expel'); return false; } //S Expel
+        if(e.which == sData.hotkeys.default) { actions.draw(deckHover); } //space
+        if(e.which == sData.hotkeys.discard) { actions.drawTo(deckHover, 'Discard'); return false; } //D Discard
+        if(e.which == sData.hotkeys.expel) { actions.drawTo(deckHover, 'Expel'); return false; } //S Expel
     }
 
     // M mulligan
-    if(e.which == 77) {
+    if(e.which == sData.hotkeys.mulligan) {
         if(gSettings.mulhotkey == 'true') { menuFunc.mulligan.func(); }
         return false;
     }
 
-    if(e.which == 78) { $('#phase .active').next().click(); return false; } // N Next Phase
-    if(e.which == 65) { ui.resAlert(); return false; } // A Respond
-    if(e.which == 81) { doPost( { action: 'chat', message: 'No Response', chatId: ui.makeid() }); return false; } // Q noRespond
-    if(e.which == 86) { menuFunc.shuffle.func($('#deck')); return false; } // V shuffle
-    if(e.which == 66) { $chatter.focus(); return false; } // B focus chat
-    if(e.which == 88) { actions.unPivot($('#battlefield .card.pivoted:not(.op)')); return false; } // X untap ALL
-    if(e.which == 67) { actions.draw($('#deck')); return false; } // C Draw
-    if(e.which == 70) { menuFunc.find.func($('#deck')); return false; } // F find card
-    if(e.which == 71) { menuFunc.looktop.func($('#deck')); return false; } // G Look at top cards
+    if(e.which == sData.hotkeys.nextPhase) { $('#phase .active').next().click(); return false; } // N Next Phase
+    if(e.which == sData.hotkeys.respond) { ui.resAlert(); return false; } // A Respond
+    if(e.which == sData.hotkeys.noResponse) { doPost( { action: 'chat', message: 'No Response', chatId: ui.makeid() }); return false; } // Q noRespond
+    if(e.which == sData.hotkeys.shuffle) { menuFunc.shuffle.func($('#deck')); return false; } // V shuffle
+    if(e.which == sData.hotkeys.focusChat) { $chatter.focus(); return false; } // B focus chat
+    if(e.which == sData.hotkeys.unpivAll) { actions.unPivot($('#battlefield .card.pivoted:not(.op)')); return false; } // X untap ALL
+    if(e.which == sData.hotkeys.draw) { actions.draw($('#deck')); return false; } // C Draw
+    if(e.which == sData.hotkeys.findCard) { menuFunc.find.func($('#deck')); return false; } // F find card
+    if(e.which == sData.hotkeys.lookTop) { menuFunc.looktop.func($('#deck')); return false; } // G Look at top cards
 
     if(e.which == 48){ ui.setNum(parseInt(actPress+0)) }
     if(e.which == 49){ ui.setNum(parseInt(actPress+1)); actPress = '1'; }
@@ -2355,8 +2353,6 @@ startSockets = function() {
                     }
                     $('#gameLog #spectateChat.scroll').append('<div data-chatid="'+value.chatId+'" class="gChat"><b style="color: #f89406;">'+value.username+' :</b> '+value.value+'</div>')
                                 .scrollTop($('#gameLog #spectateChat.scroll')[0].scrollHeight);
-
-                    console.log(clientTime, $('#spectateChat').is(':visible'), 'flahser check');
                     if((clientTime > 5)&&(!$('#spectateChat').is(':visible'))) {
                         $('#showChatSpectator').addClass('flasher');
                     }
@@ -2388,7 +2384,7 @@ startSockets = function() {
 
                 case 'card':
                     cardSync(value);
-                    console.log(value);
+                    //console.log(value);
                 break;
 
                 case 'opfindcard':
@@ -2400,7 +2396,7 @@ startSockets = function() {
                 break;
 
                 case 'oprevealCard':
-                	console.log(value);
+                	//console.log(value);
                     $(".oplookCardList").empty().append('<option value="none">Select Card</option>');
                     var alList = new Array();
                     $.each(value.showList, function(rK, rV) {
