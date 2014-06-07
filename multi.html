@@ -55,7 +55,7 @@
 				
 				window.sData = JSON.parse(data);
                 console.log(sData);
-                
+
 				window.isMobile = sData.isMobile;
 				window.spectate = sData.spectate;
 
@@ -428,6 +428,11 @@
         </select>
         <span>Menu Animations</span>
         <select class="gSettings" name="animate">
+            <option value="false">Off</option>
+            <option value="true">On</option>
+        </select>
+        <span>Sound Alerts</span>
+        <select class="gSettings" name="soundAlerts">
             <option value="false">Off</option>
             <option value="true">On</option>
         </select>

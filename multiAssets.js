@@ -2501,7 +2501,9 @@ var sounds = {
         if(sounds.canAlert) {
             sounds.canAlert = false;
             if(sounds.canSound) {
-                sounds.sndAlert.play();
+            	if(gSettings.soundAlerts == 'true') {
+            		sounds.sndAlert.play();
+            	}
                 sounds.canSound = false;
                 setTimeout(function(){ canAlert = true; }, 10000);
             }
