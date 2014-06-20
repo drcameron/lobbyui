@@ -420,11 +420,22 @@ window.uiVersion = '18'
     var modModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
         $scope.userBan = { action: 'userban' };
+        $scope.killGame = { action: 'killGame' };
         $scope.showAlert = false;
+
+        //console.log($scope.g);
 
         $scope.submitBan = function() {
             $scope.showAlert = false;
             $http.post(apiURL,  $scope.userBan, { responseType:'json', withCredentials: true }).
+            success(function(r, status) {
+                $scope.showAlert = { type: r.status, message: r.message };
+            });
+        }
+
+        $scope.submitKillGame = function() {
+            $scope.showAlert = false;
+            $http.post(apiURL,  $scope.killGame, { responseType:'json', withCredentials: true }).
             success(function(r, status) {
                 $scope.showAlert = { type: r.status, message: r.message };
             });
@@ -464,10 +475,19 @@ window.uiVersion = '18'
 			}
 			$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
 			success(function(r, status) {
-				$scope.showAlert = { type: r.status, message: r.message };
+
+				
 				if(postData.avatar != '') {
 					$scope.userData.avatar = $scope.userData.avatar + '?' + $scope.dater;
 				}
+
+                if(postData.deckBack.substr(0, 2) == 'c/') {
+
+                    $scope.cancel();
+                }
+
+                $scope.showAlert = { type: r.status, message: r.message };
+                console.log($scope.userData);
 			});
 		}
 

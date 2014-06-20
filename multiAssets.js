@@ -1768,6 +1768,8 @@ var M = {
 
 function cardSync(data) {
 
+	if(data.location == "hand") $('#hand').find('.removeMeOnLoad').first().remove();
+
 	allcards[data.cardid] = data.cardName;
 
 	var cardid = data.cardid;
@@ -2038,6 +2040,19 @@ var bindHotKeys = function(e) {
         return false;
     }
 
+    if(e.keyCode == 39) { //right key super up //thanks westerhack (bugged please fix)
+        var countChange = parseInt($('#avatar .life').text())+10-(parseInt($('#avatar .life').text())% 10);
+        $('#avatar .life').text(countChange);
+        actions.avaCounters($('#avatar .life'));
+        return false;
+    }
+    if(e.keyCode == 37) { //left key super down //thanks westerhack (bugged please fix)
+        var countChange = parseInt($('#avatar .life').text())-10+(parseInt($('#avatar .life').text())% 10);
+        $('#avatar .life').text(countChange);
+        actions.avaCounters($('#avatar .life'));
+        return false;
+    }
+
     
 
     if(currentHover != false) {
@@ -2097,6 +2112,7 @@ var bindHotKeys = function(e) {
         return false;
     }
 
+    if(e.which == sData.hotkeys.endTurn){ doPost( { action: 'changePhase', phase: 'et' } ); return false; } // E end turn //thanks westerhack
     if(e.which == sData.hotkeys.nextPhase) { $('#phase .active').next().click(); return false; } // N Next Phase
     if(e.which == sData.hotkeys.respond) { ui.resAlert(); return false; } // A Respond
     if(e.which == sData.hotkeys.noResponse) { doPost( { action: 'chat', message: 'No Response', chatId: ui.makeid() }); return false; } // Q noRespond
@@ -2525,6 +2541,11 @@ var sounds = {
 }
 
 function doPost(data, func) {
+
+	if(data['from'] != undefined && data['action'] == 'draw'&& data['amount'] != 0){ //thanks westerhack
+		for( var x=0; x < data['amount']; x++ ) $('#hand').append($('div.card.removeMeOnLoad'));
+	}
+
 	numPress = 1;
     data.sendid = ui.makeid();
     console.log(data);
@@ -2546,3 +2567,8 @@ $.fn.topZ = function() {
 (function( $ ) {
     $.fn.exists = function(){return this.length>0;}
 })( jQuery );
+
+
+
+	
+

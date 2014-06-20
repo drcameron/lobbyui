@@ -3,12 +3,17 @@
 <div class="row">
     <div class="large-3 columns">
     	<h4>Kill Game</h4>
-    	<form>
+      <form ng-submit="submitKillGame()">
     	<div class="row">
     		<div class="small-12">
+        
     			<label>Game
-		        	<select></select>
+            <select ng-model="killGame.host">
+		        	<option ng-repeat="game in g.gameList" value="{{game.host}}">{{game.gameName}}</option>
+              <option ng-repeat="game in g.specList" value="{{game.host}}">{{game.gameName}}</option>
+            </select>
 		      	</label>
+          <button type="submit" class="expand">Kill Game</button>
     		</div>
     	</div>
     	</form>
