@@ -2041,18 +2041,19 @@ var bindHotKeys = function(e) {
     }
 
     if(e.keyCode == 39) { //right key super up //thanks westerhack (bugged please fix)
-        var countChange = parseInt($('#avatar .life').text())+10-(parseInt($('#avatar .life').text())% 10);
+		var life = parseInt($('#avatar .life').text());
+        var countChange = life+10-(life% 10)-10*(life < 0 && life >-10);
         $('#avatar .life').text(countChange);
         actions.avaCounters($('#avatar .life'));
         return false;
     }
+    
     if(e.keyCode == 37) { //left key super down //thanks westerhack (bugged please fix)
-        var countChange = parseInt($('#avatar .life').text())-10+(parseInt($('#avatar .life').text())% 10);
-        $('#avatar .life').text(countChange);
+		var life = parseInt($('#avatar .life').text());
+        $('#avatar .life').text(life-(life%10)-10*(life < 0 || life % 10== 0));
         actions.avaCounters($('#avatar .life'));
         return false;
     }
-
     
 
     if(currentHover != false) {
