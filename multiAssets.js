@@ -2113,7 +2113,7 @@ var bindHotKeys = function(e) {
         return false;
     }
 
-    if(e.which == sData.hotkeys.endTurn){ doPost( { action: 'changePhase', phase: 'et' } ); return false; } // E end turn //thanks westerhack
+    if(e.which == sData.hotkeys.endturn){ doPost( { action: 'changePhase', phase: 'et' } ); return false; } // E end turn //thanks westerhack
     if(e.which == sData.hotkeys.nextPhase) { $('#phase .active').next().click(); return false; } // N Next Phase
     if(e.which == sData.hotkeys.respond) { ui.resAlert(); return false; } // A Respond
     if(e.which == sData.hotkeys.noResponse) { doPost( { action: 'chat', message: 'No Response', chatId: ui.makeid() }); return false; } // Q noRespond

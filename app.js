@@ -219,7 +219,7 @@ window.uiVersion = '18'
     			}
     		}
 
-    		var t = ($scope.g.userData.donate == 'true' ? 0 : 15);
+    		var t = ($scope.g.userData.donate == 'true' ? 0 : 20);
     		delayStart(t);
     	}
 
@@ -594,6 +594,10 @@ window.uiVersion = '18'
                 templateUrl: 'templates/gamehistory.html?'+uiVersion,
                 controller: ghModalCtrl
             });
+        }
+
+        $scope.openFriends = function() {
+            $('.left-off-canvas-toggle').click();
         }
 
 		$scope.genModal = function(which) {

@@ -191,7 +191,8 @@
 				<div class="row">
 				    <div class="small-12 columns">
 				    	<alert type="gameAlert.type" ng-show="gameAlert">{{gameAlert.message}}</alert>
-				    	<button type="submit" class="expand small" ng-class="{'disabled': startTitle != 'Start Game'}">{{startTitle}}</button>
+				    	<button type="submit" class="expand small" ng-class="{'disabled': startTitle != 'Start Game'}" style="margin: 0;">{{startTitle}}</button>
+				    	<p ng-if="g.userData.donate != 'true'" style="margin: 0; text-align: center;"><small>Funding will remove the game start delay count down</small></p>
 				    </div>
 				</div>
 			</form>
