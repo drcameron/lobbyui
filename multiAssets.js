@@ -2139,7 +2139,7 @@ var bindHotKeys = function(e) {
 startSockets = function() {
 	loadHelp('Starting Socket Connection...');
 
-	window.ws = new WebSocket('ws://www.untap.in:443/');
+	window.ws = new WebSocket('ws://dev.untap.in:443/');
     
     var socketError = setTimeout(function(){
     	alert('Web Socket failed to connect, See FAQ Connection Issues');
