@@ -18,14 +18,14 @@ gameInit = function() {
 	}
 
 	//define window globals
-	window.bfZoom = false;
+		window.bfZoom = false;
     window.bfOffset = false;
     window.numPress = 1;
     window.actPress = '';
     window.leaveWarning = true;
     window.gameRunning = true;
 
-	window.clientTime = 0;
+		window.clientTime = 0;
     window.setActPressTimer = false;
     window.setNumPressTimer = false;
     window.currentHover = false;
@@ -781,7 +781,7 @@ var init = {
 			ui.cardView('close');
 		});
 
-		$('#opdeck, #opdeck2').on('mouseenter', function() {
+		$('.card[id^="opdeck"]').on('mouseenter', function() {
 			ui.cardView($(this));
 		}).on('mouseleave', function(){
 			ui.cardView('close');
