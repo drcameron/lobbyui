@@ -2187,11 +2187,11 @@ startSockets = function() {
                     }
 
                     $('.deckCount').each(function() {
-						$( this ).addClass( "foo" );
-						if(parseInt($(this).text()) > 0) { $(this).parent().show(); }else{ $(this).parent().hide(); }
-					});
+											$( this ).addClass( "foo" );
+											if(parseInt($(this).text()) > 0) { $(this).parent().show(); }else{ $(this).parent().hide(); }
+										});
 
-                    if(parseInt($('#deck .deckCount').text()) > 0) { $('#deck').show(); $('#noDeck').hide(); }else{ $('#deck').hide(); }
+                if(parseInt($('#deck .deckCount').text()) > 0) { $('#deck').show(); $('#noDeck').hide(); }else{ $('#deck').hide(); }
 
                 break;
 
