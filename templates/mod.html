@@ -17,6 +17,18 @@
     		</div>
     	</div>
     	</form>
+
+      <h4>Change Username</h4>
+      <form ng-submit="changeUsername()">
+        <label>Current Username
+          <input type="text" placeholder="Username" ng-model="userChange.from" />
+        </label>
+        <label>New Username
+          <input type="text" placeholder="Username" ng-model="userChange.too" />
+        </label>
+        <button type="submit" class="expand">Change</button>
+      </form>
+
     </div>
     <div class="large-5 columns">
     	<h4>Temp Ban</h4>
@@ -50,6 +62,7 @@
     		<li>Ban times are limited, but can be made more permenent if required.</li>
     		<li>Killing games is for debuging issues and exteme profanity in the game name.</li>
     		<li>All actions in the Mod panel are logged.</li>
+        <li>Username changes will notify the user via email of the changes</li>
     	</ul>
     </div>
 </div>

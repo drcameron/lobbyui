@@ -52,7 +52,7 @@
 		        <li><label>Users Online <span class="right">{{g.online.length}} </span></label></li>
 		        <li ng-repeat="user in g.online | orderBy:'username'">
 		        	<a class="upperCase {{}}" dropdown-toggle="#userDropDown" ng-click="clickUser(user.username)" 
-		        	ng-class="{redText: user.blocks=='true', greenText: user.friends=='true'}">
+		        	ng-class="{redText: user.blocks=='true', greenText: user.friends=='true', blueText: user.mod=='true'}">
 		        		{{user.username}}
 			        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i> 
 			        	<i class="fi-dollar right" ng-if="user.gc == 'true'"></i>

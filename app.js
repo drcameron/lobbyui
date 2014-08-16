@@ -421,6 +421,7 @@ window.uiVersion = '18'
     	$scope.g = lobbyFeed;
         $scope.userBan = { action: 'userban' };
         $scope.killGame = { action: 'killGame' };
+        $scope.userChange = { action: 'userChange' };
         $scope.showAlert = false;
 
         //console.log($scope.g);
@@ -428,6 +429,14 @@ window.uiVersion = '18'
         $scope.submitBan = function() {
             $scope.showAlert = false;
             $http.post(apiURL,  $scope.userBan, { responseType:'json', withCredentials: true }).
+            success(function(r, status) {
+                $scope.showAlert = { type: r.status, message: r.message };
+            });
+        }
+
+        $scope.changeUsername = function() {
+            $scope.showAlert = false;
+            $http.post(apiURL,  $scope.userChange, { responseType:'json', withCredentials: true }).
             success(function(r, status) {
                 $scope.showAlert = { type: r.status, message: r.message };
             });
