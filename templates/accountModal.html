@@ -34,6 +34,9 @@
       <label>Change Password
         <input type="password" placeholder="Enter New Password" ng-model="userData.password" />
       </label>
+      <label>Game Socket Port (testing)
+        <select ng-model="userData.port" ng-options="port for port in userData.ports"></select>
+      </label>
     </div>
   </div>
   <div class="row">

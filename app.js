@@ -1,6 +1,6 @@
 window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
-window.uiVersion = '18'
+window.uiVersion = '19'
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce) {
@@ -480,6 +480,7 @@ window.uiVersion = '18'
 				deckBack: $scope.userData.deckBack,
 				password: $scope.userData.password,
 				avatar: $scope.avatarUpload.data,
+                port: $scope.userData.port,
                 deckbackUpload: $scope.deckbackUpload.data,
 			}
 			$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
@@ -647,8 +648,14 @@ window.uiVersion = '18'
 		$scope.getUpdates = function() {
 			$http.post(apiURL,  { action: 'updatesFeed' }, { responseType:'json', withCredentials: true })
 			.success(function(r, status) {
-				$scope.updateFeed = r;
-			})
+				$scope.updateFeed = r.feed;
+
+                if(r.doPop == 'true') {
+                    $scope.genModal('fundincent');
+                }
+			});
+            
+            
 		}
 
 		$scope.getDecks = function() {
@@ -742,6 +749,9 @@ window.uiVersion = '18'
         	}else{
                 var loopTime = 3000;
             }
+
+            if(tabHidden()) loopTime = 15000;
+
         	$timeout(function(){
 	        	$scope.promise = $scope.fetch($scope.g, loopCount);
 		        loopCount++;
